@@ -17,12 +17,12 @@
                     </div>
                     <p class="mb-1"><b>Yang Harus Dibayar</b></p>
                     <p class="mb-0">
-                        <span class="fw-medium me-1">{{number_format($booking->booking_price) ?? 0}}</span>
+                        <span class="fw-medium me-1">{{number_format($booking->harga_std) ?? 0}}</span>
                     </p>
                 </div>
             </div>
         </div>
-        @if ($booking->booking_price == $booking->total_payment)
+        @if ($booking->harga_std == $booking->total_payment)
             <div class="col-sm-6 col-lg-4 mb-4">
                 <div class="card card-border-shadow-success h-100">
                     <div class="card-body">
@@ -70,7 +70,7 @@
                     </div>
                     <p class="mb-1"><b>Selisih Pembayaran</b></p>
                     <p class="mb-0">
-                        <span class="fw-medium me-1">{{number_format($booking->booking_price - $booking->total_payment ?? 0)}}</span>
+                        <span class="fw-medium me-1">{{number_format($booking->harga_std - $booking->total_payment ?? 0)}}</span>
                     </p>
                 </div>
             </div>

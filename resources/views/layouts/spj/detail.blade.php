@@ -21,16 +21,10 @@
                 <tbody class="table-border-bottom-0">
                     @foreach ($detail as $data)
                         <tr>
-                            <td>{{ $data->bus->nama }}</td>
+                            <td>{{ $data->armadas ? $data->armadas->nobody : '' }}</td>
                             <td>{{ $data->supir_id }}</td>
                             <td>{{ $data->Kondektur_id }}</td>
                             <td class="text-center">
-                                {{-- <div class="dropdown text-center">
-                                    <a href="{{ route('spj/keluar', $data->details->id) }}">
-                                        <button type="button" class="btn rounded-pill btn-warning"
-                                            fdprocessedid="c80zr4">SPJ KELUAR</button>
-                                    </a>
-                                </div> --}}
                                 @if ($data->is_out == null)
                                     <form method="POST" action="{{ route('spj/keluar', $data->id) }}"
                                         style="display: inline;">
@@ -39,16 +33,27 @@
                                             fdprocessedid="c80zr4">SPJ KELUAR</button>
                                     </form>
                                 @elseif($data->is_in == null)
-                                    <form method="POST" action="{{ route('spj/masuk', $data->id) }}"
+                                    {{-- <form method="POST" action="{{ route('spj/print_in', $data->spjs->id) }}"
                                         style="display: inline;">
-                                        @csrf
                                         <button type="submit" class="btn rounded-pill btn-success"
                                             fdprocessedid="c80zr4">SPJ Masuk</button>
-                                    </form>
+                                    </form> --}}
+                                    <a href="{{ route('spj/print_in', $data->spjs->id) }}">
+                                        <button type="button" class="btn rounded-pill btn-success" fdprocessedid="c80zr4">SPJ Masuk</button>
+                                    </a>
                                 @else
                                     done
                                 @endif
                             </td>
+                            @if ($data->spjs && $data->is_in == null)
+                            <td>
+                                <a href="{{ route('spj/data', $data->spjs->id) }}">
+                                    <button type="button" class="btn rounded-pill btn-warning" fdprocessedid="c80zr4">Biaya
+                                        Lain</button>
+                                </a>
+                            </td>
+                            @endif
+
                         </tr>
                     @endforeach
 

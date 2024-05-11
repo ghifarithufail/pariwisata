@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Armada;
 use App\Models\Booking;
 use App\Models\Booking_detail;
 use App\Models\Bus;
@@ -36,14 +37,14 @@ class BookingController extends Controller
 
         $bus = collect();
 
-        $bus = Bus::whereDoesntHave('booking_details.bookings', function ($query) use ($tanggal_mulai, $tanggal_akhir) {
+        $bus = Armada::whereDoesntHave('booking_details.bookings', function ($query) use ($tanggal_mulai, $tanggal_akhir) {
             $query->whereDate('date_start', '<=', $tanggal_akhir)
                 ->whereDate('date_end', '>=', $tanggal_mulai)
                 ->where('booking_status', 1);
         })
             ->orderBy('id', 'asc')
             ->get();
-            
+
         $allBusesFull = $bus->isEmpty();
 
         return view('layouts.booking.create', [
@@ -89,7 +90,7 @@ class BookingController extends Controller
             $array_bln = array(1 => "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII");
 
             $booking->no_booking = "BK/PP/" . date("Y") . "/" . $array_bln[date('n')] . "/" . $next;
-            $booking->booking_price = 2000000;
+            $booking->harga_std = 2000000;
             $booking->save();
 
             foreach ($request->input('bus_id') as $value) {
