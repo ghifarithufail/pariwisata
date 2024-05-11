@@ -96,7 +96,7 @@ class BookingController extends Controller
             foreach ($request->input('bus_id') as $value) {
                 $detail = new Booking_detail();
                 $detail->booking_id = $booking->id;
-                $detail->bus_id = $value;
+                $detail->armada_id = $value;
                 $detail->supir_id = 1;
                 $detail->kondektur_id = 2;
                 $detail->save();
