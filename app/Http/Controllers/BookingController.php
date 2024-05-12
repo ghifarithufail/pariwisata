@@ -6,6 +6,7 @@ use App\Models\Armada;
 use App\Models\Booking;
 use App\Models\Booking_detail;
 use App\Models\Bus;
+use App\Models\Tujuan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -75,9 +76,10 @@ class BookingController extends Controller
                 'date_end' => 'nullable',
                 'telephone' => 'nullable',
                 'total_bus' => 'nullable',
+                'harga_std' => 'required',
                 'lokasi_jemput' => 'nullable',
                 'total_passanger' => 'nullable',
-                'tujuan_id' => 'nullable',
+                'tujuan_id' => 'nullable|array',
             ]);
 
             $booking = new Booking($validatedData);
@@ -90,8 +92,12 @@ class BookingController extends Controller
             $array_bln = array(1 => "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII");
 
             $booking->no_booking = "BK/PP/" . date("Y") . "/" . $array_bln[date('n')] . "/" . $next;
-            $booking->harga_std = 2000000;
+            // $booking->harga_std = 2000000; // Misalnya harga std default
+            // Ubah array tujuan_id menjadi string yang dipisahkan koma
+            $booking->tujuan_id = implode(',', $validatedData['tujuan_id']);
+
             $booking->save();
+
 
             foreach ($request->input('bus_id') as $value) {
                 $detail = new Booking_detail();
@@ -141,21 +147,21 @@ class BookingController extends Controller
     {
         try {
             DB::beginTransaction();
-    
+
             $bookingId = $request->input('booking_id'); // Retrieve bookingId from request data
             $detail = Booking_detail::where('id', $bookingId)->first(); // Find Booking_detail by bookingId
-    
+
             if (!$detail) {
                 return response()->json(['error' => 'Booking detail not found'], 404);
             }
-    
+
             // Now that you have the model instance, you can update its properties
             $detail->supir_id =  $request->input('supir_id');
             $detail->Kondektur_id = $request->input('kondektur_id');
             $detail->save();
-    
+
             DB::commit();
-    
+
             return response()->json(['success' => 'Data updated successfully'], 200);
         } catch (\Exception $e) {
             DB::rollback();
@@ -165,17 +171,40 @@ class BookingController extends Controller
     }
 
 
-    public function jadwal(){
-        $jadwal = Booking_detail::whereHas('bookings', function($bookings){
+    public function jadwal()
+    {
+        $jadwal = Booking_detail::whereHas('bookings', function ($bookings) {
             $bookings->whereDate('date_start', '>=', Carbon::now())
-            ->whereDate('date_end', '<=', Carbon::now());
+                ->whereDate('date_end', '<=', Carbon::now());
         })->get();
 
         // $jadwal = Booking::with('details')->whereDate('date_start', '>=', Carbon::now())
         // ->whereDate('date_end', '<=', Carbon::now())->get();
 
-        return view('layouts.jadwal.index',[
+        return view('layouts.jadwal.index', [
             'jadwal' => $jadwal
         ]);
+    }
+
+    public function getTujuan(Request $request)
+    {
+        $tujuan = [];
+        $tujuan = Tujuan::where('nama_tujuan', 'LIKE', "%$request->name%")->get();
+
+        return response()->json($tujuan);
+    }
+
+    public function getTotalHargaStd(Request $request)
+    {
+        $tujuanIds = $request->tujuan_ids;
+        $totalHargaStd = 0;
+
+        // Iterasi melalui semua tujuan yang dipilih
+        foreach ($tujuanIds as $tujuanId) {
+            $tujuan = Tujuan::findOrFail($tujuanId);
+            $totalHargaStd += $tujuan->harga_std;
+        }
+
+        return response()->json(['total_harga_std' => $totalHargaStd]);
     }
 }

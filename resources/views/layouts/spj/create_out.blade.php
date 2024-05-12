@@ -58,8 +58,17 @@
                         <div class="form-group">
                             <label class="control-label col-sm-3">Tujuan :</label>
                             <div class="col-sm-9">
-                                <input type="text" value="{{ $spj->booking_details->bookings->tujuan_id }}" disabled
-                                    class="form-control" />
+                                <input type="text" value="@foreach ($spj->booking_details->bookings->tujuans() as $key => $item){{ $item->nama_tujuan }}@if (!$loop->last), @endif @endforeach"
+                                disabled class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">No SPJ:</label>
+                            <div class="col-sm-9">
+                                <input type="text"
+                                    value="{{ $spj->no_spj }}"
+                                    disabled class="form-control" />
                             </div>
                         </div>
                     </div>
@@ -72,13 +81,19 @@
                         <form action="{{ route('spj/print_out/store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="form-group mt-3">
+                                <label class="control-label col-sm-3">Tujuan :</label>
+                                <div class="col-sm-12 mt-2">
+                                    <input type="text" class="form-control input-quantity" name="tujuan" required>
+                                </div>
+                            </div>
+                            <div class="form-group mt-3">
                                 <label class="control-label col-sm-3">Lokasi Jemput :</label>
                                 <div class="col-sm-12 mt-2">
                                     <input type="text" class="form-control input-quantity" name="lokasi_jemput" required>
                                 </div>
                             </div>
                             <input type="text" value="{{ $spj->id }}" name="spj_id" readonly
-                                class="form-control" />
+                                class="form-control" hidden/>
 
                             <div class="form-group mt-3">
                                 <label class="control-label col-sm-3">Jam Jemput :</label>

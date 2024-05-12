@@ -132,6 +132,7 @@ class SpjController extends Controller
                 'jam_jemput' => 'required',
                 'km_keluar' => 'required',
                 'uang_jalan' => 'required',
+                'tujuan' => 'required',
 
             ]);
 

@@ -160,6 +160,11 @@
                         <td width="1%">:</td>
                         <td>Rp. {{ number_format($spj->uang_jalan) }}</td>
                     </tr>
+                    <tr>
+                        <td width="170">Tujuan</td>
+                        <td width="1%">:</td>
+                        <td>{{$spj->tujuan}}</td>
+                    </tr>
                 </table>
             </div>
             <div>Dengan rincian detail booking sebagai berikut : </div>
@@ -171,14 +176,34 @@
                         <td>{{ $spj->booking_details->bookings->customer }}</td>
                     </tr>
                     <tr>
+                        <td width="170">Telephone</td>
+                        <td width="1%">:</td>
+                        <td>0{{ $spj->booking_details->bookings->telephone }}</td>
+                    </tr>
+                    <tr>
                         <td width="170">Lokasi Jemput</td>
                         <td width="1%">:</td>
                         <td>{{ $spj->lokasi_jemput }}</td>
                     </tr>
                     <tr>
+                        <td width="170">Biaya Jemput</td>
+                        <td width="1%">:</td>
+                        <td>biaya jemput</td>
+                    </tr>
+                    <tr>
                         <td width="170">Jam Jemput</td>
                         <td width="1%">:</td>
                         <td>{{ $spj->jam_jemput }}</td>
+                    </tr>
+                    <tr>
+                        <td width="170">Tujuan</td>
+                        <td width="1%">:</td>
+                        <td>
+                            @foreach ($spj->booking_details->bookings->tujuans() as $key => $item)
+                                {{ $item->nama_tujuan }}
+                                @if (!$loop->last), @endif
+                            @endforeach
+                        </td>
                     </tr>
                 </table>
             </div>

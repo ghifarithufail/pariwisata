@@ -4,7 +4,7 @@
     <head>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        
+
     </head>
     <div class="card mt-4">
         <div class="card-body">
@@ -62,7 +62,9 @@
                         <div class="form-group">
                             <label class="control-label col-sm-3">Tujuan :</label>
                             <div class="col-sm-9">
-                                <input type="text" value="{{ $booking->tujuan_id }}" disabled class="form-control" />
+                                <input type="text"
+                                    value="@foreach ($booking->tujuans() as $key => $item){{ $item->nama_tujuan }}@if (!$loop->last), @endif @endforeach"
+                                    disabled class="form-control" />
                             </div>
                         </div>
                     </div>
@@ -84,18 +86,20 @@
                             <tbody class="table-border-bottom-0">
                                 @foreach ($booking->details as $detail)
                                     <tr>
-                                        <td>{{ $detail->bus->nama }}</td>
+                                        <td>{{ $detail->armadas->nobody }}</td>
                                         <td>{{ $detail->supir_id }}</td>
                                         <td>{{ $detail->Kondektur_id }}</td>
                                         <td class="text-center">
                                             <button type="button" class="btn btn-primary launch-modal"
                                                 data-bs-toggle="modal" data-bs-target="#basicModal"
-                                                data-supir="{{ $detail->supir_id }}" data-bus="{{ $detail->bus->nama }}"
+                                                data-supir="{{ $detail->supir_id }}"
+                                                data-bus="{{ $detail->armadas->nobody }}"
                                                 data-kondektur="{{ $detail->Kondektur_id }}"
                                                 data-booking-id="{{ $detail->id }}">
                                                 Launch modal
                                             </button>
-                                            <input type="hidden" name="bookingId" id="bookingId" value="{{ $detail->id }}">
+                                            <input type="hidden" name="bookingId" id="bookingId"
+                                                value="{{ $detail->id }}">
                                         </td>
                                     </tr>
                                 @endforeach

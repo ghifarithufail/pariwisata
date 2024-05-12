@@ -27,7 +27,13 @@
                             <td>{{ $data->date_start }}</td>
                             <td>{{ $data->date_end }}</td>
                             <td>{{ $data->lokasi_jemput }}</td>
-                            <td>{{ $data->tujuan_id }}</td>
+                            <td>
+                                @foreach ($data->tujuans() as $item)
+                                    {{ $item->nama_tujuan }}
+                                    @if (!$loop->last),
+                                    @endif
+                                @endforeach
+                            </td>
 
                             <td>
                                 <div class="dropdown text-center">

@@ -20,4 +20,12 @@ class Booking extends Model
         return $this->hasMany(Booking_detail::class, 'booking_id', 'id');
     }
 
+    public function tujuans(){
+        // Explode the comma-separated IDs
+        $tujuanIds = explode(',', $this->tujuan_id);
+        
+        // Query the Tujuan model with the exploded IDs
+        return Tujuan::whereIn('id', $tujuanIds)->get();
+    }
+
 }

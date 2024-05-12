@@ -27,6 +27,8 @@ Route::prefix('booking')->group(function () {
     Route::get('/edit/{id}', [BookingController::class, 'edit'])->name('booking/edit');
     Route::post('/update-data', [BookingController::class, 'update'])->name('booking/update');
     Route::get('/jadwal', [BookingController::class, 'jadwal'])->name('jadwal');
+    Route::post('/getTujuan', [BookingController::class, 'getTujuan'])->name('getTujuan');
+    Route::post('/getTotalHargaStd', [BookingController::class, 'getTotalHargaStd'])->name('getTotalHargaStd');
 
 });
 

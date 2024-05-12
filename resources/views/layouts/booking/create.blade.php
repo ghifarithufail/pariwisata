@@ -3,6 +3,19 @@
 
     <head>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <!-- Select2 CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"
+            integrity="sha512-nMNlpuaDPrqlEls3IX/Q56H36qvBASwb3ipuo3MxeWbsQB1881ox0cRv7UPTgBlriqoynt35KjEwgGUeUXIPnw=="
+            crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+        <!-- Select2 JavaScript -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"
+            integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     </head>
     <style>
         .bus-items {
@@ -77,8 +90,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="row g-3" style="zoom: 0.8">
-
+                                    <div class="row g-3">
                                         <div class="col-sm-6 fv-plugins-icon-container">
                                             <label class="form-label" for="customer">Customer</label>
                                             <input type="text" id="customer" name="customer" class="form-control"
@@ -98,10 +110,18 @@
                                             <input type="number" id="total_passanger" name="total_passanger"
                                                 class="form-control">
                                         </div>
-                                        <div class="col-sm-6 fv-plugins-icon-container">
+                                        <div class="col-sm-6 ">
                                             <label class="form-label" for="tujuan_id">tujuan id</label>
-                                            <input type="number" id="tujuan_id" name="tujuan_id" class="form-control">
+                                            <select class="form-select" id="tujuan_id" aria-label="Default select example"
+                                                name="tujuan_id[]" multiple='multiple'>
+                                            </select>
                                         </div>
+                                        <div class="col-sm-6 fv-plugins-icon-container">
+                                            <label class="form-label" for="harga_std">Harga Booking</label>
+                                            <input type="text" id="total_harga_std" name="harga_std"
+                                                class="form-control" readonly>
+                                        </div>
+
                                         <div class="col-sm-6">
                                             <label class="form-label" for="total_bus">Total Bus</label>
                                             <input type="number" id="total_bus" name="total_bus" class="form-control"
@@ -165,5 +185,52 @@
         @if (session('error'))
             toastr.error("{{ session('error') }}");
         @endif
+
+        $(document).ready(function() {
+            $('#tujuan_id').select2({
+                placeholder: 'Pilih Tujuan',
+                allowClear: true,
+                ajax: {
+                    url: "{{ route('getTujuan') }}",
+                    type: "post",
+                    delay: 250,
+                    dataType: 'json',
+                    data: function(params) {
+                        return {
+                            name: params.term,
+                            "_token": "{{ csrf_token() }}",
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: $.map(data, function(item) {
+                                return {
+                                    id: item.id,
+                                    text: item.nama_tujuan + ' - ' + item.pemakaian
+                                }
+                            })
+                        };
+                    },
+                },
+            }).on('change', function(e) {
+                var tujuanIds = $(this).val(); // Ambil semua tujuan_id yang dipilih
+                // Kirim permintaan AJAX untuk mendapatkan jumlah harga_std berdasarkan tujuan yang dipilih
+                $.ajax({
+                    url: "{{ route('getTotalHargaStd') }}",
+                    type: "post",
+                    data: {
+                        tujuan_ids: tujuanIds,
+                        "_token": "{{ csrf_token() }}",
+                    },
+                    success: function(response) {
+                        // Perbarui nilai tampilan dengan total harga_std yang diterima dari respons AJAX
+                        $('#total_harga_std').val(response.total_harga_std);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+        });
     </script>
 @endsection

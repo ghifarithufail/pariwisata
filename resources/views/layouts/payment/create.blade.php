@@ -133,7 +133,9 @@
                         <div class="form-group">
                             <label class="control-label col-sm-3">Tujuan :</label>
                             <div class="col-sm-9">
-                                <input type="text" value="{{ $booking->tujuan_id }}" disabled class="form-control" />
+                                <input type="text"
+                                    value="@foreach ($booking->tujuans() as $key => $item){{ $item->nama_tujuan }}@if (!$loop->last), @endif @endforeach"
+                                    disabled class="form-control" />
                             </div>
                         </div>
                     </div>
