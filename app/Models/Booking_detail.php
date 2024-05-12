@@ -18,4 +18,14 @@ class Booking_detail extends Model
     {
         return $this->belongsTo(Bus::class, 'bus_id', 'id');
     }
+
+    public function armadas()
+    {
+        return $this->belongsTo(Armada::class, 'armada_id', 'id');
+    }
+
+    public function spjs()
+    {
+        return $this->belongsTo(Spj::class, 'id', 'booking_detail_id');
+    }
 }

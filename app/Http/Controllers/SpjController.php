@@ -16,44 +16,68 @@ class SpjController extends Controller
      */
     public function index()
     {
-        $booking = Booking::whereHas('details', function($details){
-            $details->where('is_in', null);
+        $booking = Booking::whereHas('details', function ($details) {
+            // $details->where('is_in', null);
         })->orderBy('created_at', 'desc')->get();
 
 
-        return view('layouts.spj.index',[
+        return view('layouts.spj.index', [
             'booking' => $booking
         ]);
     }
 
-    public function detail($id){
-        $detail = Booking_detail::where('booking_id', $id)->orderBy('created_at', 'desc')->get();
+    public function detail($id)
+    {
+        $detail = Booking_detail::with('armadas')->where('booking_id', $id)->orderBy('created_at', 'desc')->get();
 
-        return view('layouts.spj.detail',[
+        return view('layouts.spj.detail', [
             'detail' => $detail
         ]);
+    }
+
+    public function data($id)
+    {
+        $spj = Spj::where('id', $id)->first();
+
+        return view('layouts.spj.data', [
+            'spj' => $spj
+        ]);
+    }
+
+    public function biaya_lain(Request $request)
+    {
+        $spj = Spj::where('id', $request->spj_id)->first();
+        $spj->biaya_lain = $request->biaya_lain;
+        $spj->keterangan_spj = $request->keterangan_spj;
+        $spj->save();
+
+        return redirect('/spj/detail/' . $spj->booking_details->bookings->id);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function keluar(Request $request,$id)
+    public function keluar(Request $request, $id)
     {
         try {
+<<<<<<< HEAD
             $detail = Booking_detail::where('id',$id)->first();
+=======
+            $detail = Booking_detail::where('id', $id)->first();
+>>>>>>> 58a899bc6e996162abe3c00683ee6b15426fe411
 
 
             $count = Spj::whereMonth("created_at", date("m"))
                 ->whereYear("created_at", date("Y"))
-                ->where('type','1')
+                ->where('type', '1')
                 ->count();
 
-            $next = $count+1;
-            $array_bln = array(1=>"I","II","III", "IV", "V","VI","VII","VIII","IX","X", "XI","XII");
+            $next = $count + 1;
+            $array_bln = array(1 => "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII");
 
             $spj = new Spj();
             $spj->booking_detail_id = $detail->id;
-            $spj->no_spj = "SPJ/BKO/" . date("Y") . "/" . $array_bln[date('n')] ."/" . $next;
+            $spj->no_spj = "SPJ/BKO/" . date("Y") . "/" . $array_bln[date('n')] . "/" . $next;
             $spj->type = '1';
             $spj->save();
 
@@ -62,7 +86,6 @@ class SpjController extends Controller
 
             DB::commit();
             return redirect('spj/print/out/' . $spj->id);
-
         } catch (\Exception $e) {
             DB::rollBack();
             Log::info($e);
@@ -71,46 +94,32 @@ class SpjController extends Controller
         }
     }
 
-    public function masuk(Request $request,$id)
-    {
-        try {
-            $detail = Booking_detail::where('id',$id)->first();
-
-            $count = Spj::whereMonth("created_at", date("m"))
-                ->whereYear("created_at", date("Y"))
-                ->where('type','2')
-                ->count();
-
-            $next = $count+1;
-            $array_bln = array(1=>"I","II","III", "IV", "V","VI","VII","VIII","IX","X", "XI","XII");
-
-            $spj = new Spj();
-            $spj->booking_detail_id = $detail->id;
-            $spj->no_spj = "SPJ/BKI/PP/" . date("Y") . "/" . $array_bln[date('n')] ."/" . $next;
-            $spj->type = '2';
-            $spj->save();
-
-            $detail->is_in = 1;
-            $detail->save();
-
-            DB::commit();
-            return redirect()->back()->with('success', 'SPJ Masuk Berhasil Dibuat');
-        } catch (\Exception $e) {
-
-            DB::rollBack();
-            Log::info($e);
-
-            return redirect()->back()->with('error', 'Gagal Membuat SPJ Masuk ' . $e->getMessage());
-        }
-    }
-
     /**
      * Store a newly created resource in storage.
      */
-    public function print_out($id)
+    public function detail_out($id)
     {
         $spj = Spj::find($id);
-        return view('layouts.spj.out',[
+
+        return view('layouts.spj.create_out', [
+            'spj' => $spj
+        ]);
+    }
+
+    public function print($id){
+        $spj = Spj::find($id);
+
+        return view('layouts.spj.out', [
+            'spj' => $spj
+        ]);
+    }
+
+    public function detail_in($id)
+    {
+        $spj = Spj::find($id);
+
+
+        return view('layouts.spj.create_in', [
             'spj' => $spj
         ]);
     }
@@ -118,32 +127,104 @@ class SpjController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Spj $spj)
+    public function store_print_out(Request $request)
     {
-        //
+        DB::beginTransaction();
+
+        try {
+            $validatedData = $request->validate([
+                'lokasi_jemput' => 'required',
+                'jam_jemput' => 'required',
+                'km_keluar' => 'required',
+                'uang_jalan' => 'required',
+                'tujuan' => 'required',
+
+            ]);
+
+            $spj = Spj::where('id', $request->spj_id)->first();
+            $spj->update($validatedData);
+
+            DB::commit();
+            // return redirect()->route('payment')->with('success', 'Payment berhasil disimpan');
+            return redirect('spj/print/out/' . $spj->id)->with('success', 'SPJ berhasil Dibuat');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::info($e);
+
+            // return redirect()->route('payment')->with('error', 'Gagal menyimpan Pembayaran ' . $e->getMessage());
+            return redirect('spj/print/out/' . $spj->id)->with('error', 'Gagal membuat SPJ ' . $e->getMessage());
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Spj $spj)
+    public function store_print_in(Request $request)
     {
-        //
+        DB::beginTransaction();
+
+        try {
+            $validatedData = $request->validate([
+                'bbm' => 'required',
+                'uang_makan' => 'required',
+                'parkir' => 'required',
+                'tol' => 'required',
+                'km_masuk' => 'required',
+
+            ]);
+            $pengeluaran = $request->bbm + $request->uang_makan + $request->parkir + $request->tol;
+
+            $spj = Spj::where('id', $request->spj_id)->first();
+            $spj->sisa_uang_jalan = $spj->uang_jalan - $pengeluaran - $spj->biaya_lain;
+            $spj->type = 2;
+            $spj->update($validatedData);
+
+            $sisa_uang_jalan = $spj->where('booking_detail_id' , $spj->booking_detail_id)->sum('sisa_uang_jalan');
+            $detail = Booking_detail::where('id', $spj->booking_detail_id)->first();
+            $detail->is_in = 1;
+            $detail->total_sisa_uang_jalan = $sisa_uang_jalan;
+            $detail->save();
+
+            DB::commit();
+            return redirect('spj/print/in/' . $spj->id)->with('success', 'SPJ berhasil Dibuat');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::info($e);
+            return redirect('spj/print/in/' . $spj->id)->with('error', 'Gagal menyimpan Pembayaran ' . $e->getMessage());
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Spj $spj)
+    public function masuk(Request $request, $id)
     {
-        //
-    }
+        try {
+<<<<<<< HEAD
+            $detail = Booking_detail::where('id',$id)->first();
+=======
+            $detail = Booking_detail::where('id', $id)->first();
+>>>>>>> 58a899bc6e996162abe3c00683ee6b15426fe411
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Spj $spj)
-    {
-        //
+            $count = Spj::whereMonth("created_at", date("m"))
+                ->whereYear("created_at", date("Y"))
+                ->where('type', '2')
+                ->count();
+
+            $next = $count + 1;
+            $array_bln = array(1 => "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII");
+
+            $spj = new Spj();
+            $spj->booking_detail_id = $detail->id;
+            $spj->no_spj = "SPJ/BKI/PP/" . date("Y") . "/" . $array_bln[date('n')] . "/" . $next;
+            $spj->type = '2';
+            $spj->save();
+
+            $detail->is_in = 1;
+            $detail->save();
+
+            DB::commit();
+            return redirect('spj/print/in/' . $spj->id);
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+            Log::info($e);
+
+            return redirect()->back()->with('error', 'Gagal Membuat SPJ Masuk ' . $e->getMessage());
+        }
     }
 }

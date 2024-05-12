@@ -53,6 +53,8 @@ Route::prefix('booking')->group(function () {
     Route::get('/edit/{id}', [BookingController::class, 'edit'])->name('booking/edit');
     Route::post('/update-data', [BookingController::class, 'update'])->name('booking/update');
     Route::get('/jadwal', [BookingController::class, 'jadwal'])->name('jadwal');
+    Route::post('/getTujuan', [BookingController::class, 'getTujuan'])->name('getTujuan');
+    Route::post('/getTotalHargaStd', [BookingController::class, 'getTotalHargaStd'])->name('getTotalHargaStd');
 
 });
 
@@ -67,7 +69,13 @@ Route::prefix('spj')->group(function () {
 
     Route::get('/', [SpjController::class, 'index'])->name('spj');
     Route::get('/detail/{id}', [SpjController::class, 'detail'])->name('spj/detail');
+    Route::get('/data/{id}', [SpjController::class, 'data'])->name('spj/data');
     Route::post('/keluar/{id}', [SpjController::class, 'keluar'])->name('spj/keluar');
-    Route::post('/masuk/{id}', [SpjController::class, 'masuk'])->name('spj/masuk');
-    Route::get('/print/out/{id}', [SpjController::class, 'print_out'])->name('spj/print_out');
+    // Route::post('/masuk/{id}', [SpjController::class, 'masuk'])->name('spj/masuk');
+    Route::get('/print/out/{id}', [SpjController::class, 'detail_out'])->name('spj/print_out');
+    Route::get('/print_out/{id}', [SpjController::class, 'print'])->name('spj/print');
+    Route::get('/print/in/{id}', [SpjController::class, 'detail_in'])->name('spj/print_in');
+    Route::post('/print/out/store', [SpjController::class, 'store_print_out'])->name('spj/print_out/store');
+    Route::post('/print/in/store', [SpjController::class, 'store_print_in'])->name('spj/print_in/store');
+    Route::post('/biaya_lain/store', [SpjController::class, 'biaya_lain'])->name('spj/biaya_lain');
 });
