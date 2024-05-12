@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Log;
 use App\Models\Booking;
 use App\Models\Payment;
 use App\Models\TypePayment;
@@ -81,7 +82,7 @@ class PaymentController extends Controller
             return redirect()->route('payment')->with('success', 'Payment berhasil disimpan');
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::info($e);
+            Log::info($e);
 
             return redirect()->route('payment')->with('error', 'Gagal menyimpan Pembayaran ' . $e->getMessage());
         }

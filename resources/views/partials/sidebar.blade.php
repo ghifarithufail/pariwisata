@@ -49,7 +49,7 @@
                 </svg>
 
             </span>
-            <span class="app-brand-text demo menu-text fw-bold ms-2">Walkot</span>
+            <span class="app-brand-text demo menu-text fw-bold ms-2">Redwhite Star</span>
         </a>
 
         <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">
@@ -70,6 +70,26 @@
         </li>
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Pages</span>
+        </li>
+
+        <li class="menu-item" style="">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-layout"></i>
+                <div data-i18n="Administrator">Administrator</div>
+            </a>
+
+            <ul class="menu-sub">
+                <li class="menu-item">
+                    <a href="{{ route('roles') }}" class="menu-link">
+                        <div data-i18n="Roles">Role</div>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="{{ route('users') }}" class="menu-link">
+                        <div data-i18n="Users">Users</div>
+                    </a>
+                </li>
+            </ul>
         </li>
 
         <li class="menu-item" style="">

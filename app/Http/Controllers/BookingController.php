@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Booking;
-use App\Models\Booking_detail;
-use App\Models\Bus;
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
+use App\Models\Bus;
+use App\Models\Booking;
 use Illuminate\Http\Request;
+use App\Models\Booking_detail;
 use Illuminate\Support\Facades\DB;
 
 class BookingController extends Controller
@@ -43,7 +44,7 @@ class BookingController extends Controller
         })
             ->orderBy('id', 'asc')
             ->get();
-            
+
         $allBusesFull = $bus->isEmpty();
 
         return view('layouts.booking.create', [
@@ -105,7 +106,7 @@ class BookingController extends Controller
             return redirect()->back()->with('success', 'Data berhasil disimpan');
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::info($e);
+            Log::info($e);
 
             return redirect()->back()->with('error', 'Gagal menyimpan data: ' . $e->getMessage());
         }
@@ -140,25 +141,25 @@ class BookingController extends Controller
     {
         try {
             DB::beginTransaction();
-    
+
             $bookingId = $request->input('booking_id'); // Retrieve bookingId from request data
             $detail = Booking_detail::where('id', $bookingId)->first(); // Find Booking_detail by bookingId
-    
+
             if (!$detail) {
                 return response()->json(['error' => 'Booking detail not found'], 404);
             }
-    
+
             // Now that you have the model instance, you can update its properties
             $detail->supir_id =  $request->input('supir_id');
             $detail->Kondektur_id = $request->input('kondektur_id');
             $detail->save();
-    
+
             DB::commit();
-    
+
             return response()->json(['success' => 'Data updated successfully'], 200);
         } catch (\Exception $e) {
             DB::rollback();
-            \Log::error($e);
+            Log::error($e);
             return response()->json(['error' => $e->getMessage()], 422);
         }
     }

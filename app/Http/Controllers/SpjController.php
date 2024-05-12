@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Booking;
-use App\Models\Booking_detail;
 use App\Models\Spj;
+use App\Models\Booking;
 use Illuminate\Http\Request;
+use App\Models\Booking_detail;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class SpjController extends Controller
 {
@@ -40,7 +41,7 @@ class SpjController extends Controller
     {
         try {
             $detail = Booking_detail::where('id',$id)->first();
-            
+
 
             $count = Spj::whereMonth("created_at", date("m"))
                 ->whereYear("created_at", date("Y"))
@@ -64,7 +65,7 @@ class SpjController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::info($e);
+            Log::info($e);
 
             return redirect()->back()->with('error', 'Gagal Membuat SPJ Keluar ' . $e->getMessage());
         }
@@ -74,7 +75,7 @@ class SpjController extends Controller
     {
         try {
             $detail = Booking_detail::where('id',$id)->first();
-            
+
             $count = Spj::whereMonth("created_at", date("m"))
                 ->whereYear("created_at", date("Y"))
                 ->where('type','2')
@@ -97,7 +98,7 @@ class SpjController extends Controller
         } catch (\Exception $e) {
 
             DB::rollBack();
-            \Log::info($e);
+            Log::info($e);
 
             return redirect()->back()->with('error', 'Gagal Membuat SPJ Masuk ' . $e->getMessage());
         }
