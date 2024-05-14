@@ -72,7 +72,7 @@ class PaymentController extends Controller
             $booking->total_payment = $totalPayment;
             $booking->save();
 
-            if ($booking->booking_price == $booking->total_payment) {
+            if ($booking->grand_total == $booking->total_payment) {
                 $booking->payment_status = 1;
                 $booking->save();
             }

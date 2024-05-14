@@ -22,7 +22,7 @@
                 </div>
             </div>
         </div>
-        @if ($booking->harga_std == $booking->total_payment)
+        @if ($booking->grand_total == $booking->total_payment)
             <div class="col-sm-6 col-lg-4 mb-4">
                 <div class="card card-border-shadow-success h-100">
                     <div class="card-body">

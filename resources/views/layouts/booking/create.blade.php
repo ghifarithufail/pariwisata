@@ -26,8 +26,8 @@
     </style>
     <div class="container-xxl flex-grow-1 container-p-y">
         {{-- <h4 class="py-3 mb-4">
-            <span class="text-muted fw-light">Wizard examples /</span> Property Listing
-        </h4> --}}
+        <span class="text-muted fw-light">Wizard examples /</span> Property Listing
+    </h4> --}}
 
         <!-- Property Listing Wizard -->
         <div class="card text-center">
@@ -90,43 +90,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="row g-3">
-                                        <div class="col-sm-6 fv-plugins-icon-container">
-                                            <label class="form-label" for="customer">Customer</label>
-                                            <input type="text" id="customer" name="customer" class="form-control"
-                                                value="{{ old('customer') }}">
-                                        </div>
-                                        <div class="col-sm-6 fv-plugins-icon-container">
-                                            <label class="form-label" for="telephone">Telephone</label>
-                                            <input type="text" id="telephone" name="telephone" class="form-control">
-                                        </div>
-                                        <div class="col-sm-6 fv-plugins-icon-container">
-                                            <label class="form-label" for="lokasi_jemput">lokasi jemput</label>
-                                            <input type="number" id="lokasi_jemput" name="lokasi_jemput"
-                                                class="form-control">
-                                        </div>
-                                        <div class="col-sm-6 fv-plugins-icon-container">
-                                            <label class="form-label" for="total_passanger">total passanger</label>
-                                            <input type="number" id="total_passanger" name="total_passanger"
-                                                class="form-control">
-                                        </div>
-                                        <div class="col-sm-6 ">
-                                            <label class="form-label" for="tujuan_id">tujuan id</label>
-                                            <select class="form-select" id="tujuan_id" aria-label="Default select example"
-                                                name="tujuan_id[]" multiple='multiple'>
-                                            </select>
-                                        </div>
-                                        <div class="col-sm-6 fv-plugins-icon-container">
-                                            <label class="form-label" for="harga_std">Harga Booking</label>
-                                            <input type="text" id="total_harga_std" name="harga_std"
-                                                class="form-control" readonly>
-                                        </div>
-
-                                        <div class="col-sm-6">
-                                            <label class="form-label" for="total_bus">Total Bus</label>
-                                            <input type="number" id="total_bus" name="total_bus" class="form-control"
-                                                readonly>
-                                        </div>
+                                    <div class="row g-3 mt-3">
                                         <div class="col-sm-6">
                                             <label class="form-label" for="date_start">Tanggal Awal</label>
                                             <input type="text" id="date_start"
@@ -146,8 +110,56 @@
                                             <input type="date" id="date_end" value="{{ $request['end'] }}"
                                                 name="date_end" class="form-control" placeholder="john.doe" hidden>
                                         </div>
-                                        <div class="pt-5 d-flex justify-content-end">
-                                            <button type="submit" class="btn btn-primary me-sm-3 me-1">Submit</button>
+                                        <div class="col-sm-6 fv-plugins-icon-container">
+                                            <label class="form-label" for="customer">Customer</label>
+                                            <input type="text" id="customer" name="customer" class="form-control"
+                                                value="{{ old('customer') }}">
+                                        </div>
+                                        <div class="col-sm-6 fv-plugins-icon-container">
+                                            <label class="form-label" for="telephone">Telephone</label>
+                                            <input type="text" id="telephone" name="telephone" class="form-control">
+                                        </div>
+                                        <div class="col-sm-6 ">
+                                            <label class="form-label" for="tujuan_id">tujuan</label>
+                                            <select class="form-select" id="tujuan_id"
+                                                aria-label="Default select example" name="tujuan_id">
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="diskon">Diskon (%)</label>
+                                            <input type="number" id="diskon" name="diskon" class="form-control">
+                                        </div>
+                                        <div class="col-sm-6 fv-plugins-icon-container">
+                                            <label class="form-label" for="biaya_jemput">Biaya Jemput</label>
+                                            <input type="number" id="biaya_jemput" name="biaya_jemput"
+                                                class="form-control">
+                                        </div>
+                                        <div class="col-sm-6 fv-plugins-icon-container">
+                                            <label class="form-label" for="harga_std">Harga Booking</label>
+                                            <input type="text" id="total_harga_std" name="harga_std"
+                                                class="form-control" readonly>
+                                        </div>
+
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="total_bus">Total Bus</label>
+                                            <input type="number" id="total_bus" name="total_bus" class="form-control"
+                                                readonly>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="grand_total">Total Biaya</label>
+                                            <input type="number" id="grand_total" name="grand_total"
+                                                class="form-control" readonly>
+                                        </div>
+                                        <div class="col-sm-6 fv-plugins-icon-container">
+                                            <label class="form-label" for="keterangan">Keterangan</label>
+                                            <input type="text" id="keterangan" name="keterangan"
+                                                class="form-control">
+                                        </div>
+                                        <div class="pt-5 d-flex justify-content-end" id="button_container">
+                                            <button type="button" class="btn btn-warning me-sm-3 me-1"
+                                                id="calculate_btn">Hitung</button>
+                                            <button type="submit" class="btn btn-primary me-sm-3 me-1"
+                                                id="submit_btn">Submit</button>
                                         </div>
                                     </div>
                                 </div>
@@ -164,19 +176,6 @@
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var checkboxes = document.querySelectorAll('input[name="bus_id[]"]');
-            var totalBusInput = document.getElementById('total_bus');
-
-            checkboxes.forEach(function(checkbox) {
-                checkbox.addEventListener('change', function() {
-                    var checkedCheckboxes = document.querySelectorAll(
-                        'input[name="bus_id[]"]:checked');
-                    totalBusInput.value = checkedCheckboxes.length;
-                });
-            });
-        });
-        // Jika terdapat pesan sukses dari server, tampilkan pesan toastr
         @if (session('success'))
             toastr.success("{{ session('success') }}");
         @endif
@@ -185,6 +184,81 @@
         @if (session('error'))
             toastr.error("{{ session('error') }}");
         @endif
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hide the Submit button when the page loads
+            document.getElementById('submit_btn').style.display = 'none';
+
+            // Event listener for the "Hitung" button
+            document.getElementById('calculate_btn').addEventListener('click', function() {
+                // Show the Submit button when the "Hitung" button is clicked
+                document.getElementById('submit_btn').style.display = 'inline-block';
+
+                // Call your calculation function here
+                updateGrandTotal();
+                formatHargaStd();
+            });
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+            var checkboxes = document.querySelectorAll('input[name="bus_id[]"]');
+            var totalBusInput = document.getElementById('total_bus');
+            var hargaStdInput = document.getElementById('total_harga_std');
+            var hargaBiayaJemput = document.getElementById('biaya_jemput');
+            var diskon = document.getElementById('diskon');
+            var grandTotalInput = document.getElementById('grand_total');
+
+
+            // Event listener untuk perubahan pada checkbox bus
+            checkboxes.forEach(function(checkbox) {
+                checkbox.addEventListener('change', function() {
+                    updateGrandTotal(); // Panggil fungsi untuk memperbarui grand total
+                });
+            });
+
+            diskon.addEventListener('change', function() {
+                if (diskon.value === '') {
+                    diskon.value = 0; // Set nilai diskon menjadi 0 jika kosong
+                }
+                updateGrandTotal(); // Panggil fungsi untuk memperbarui grand total
+            });
+
+            // Event listener untuk perubahan pada kolom diskon
+            $('#calculate_btn').click(function() {
+                updateGrandTotal(); // Panggil fungsi untuk memperbarui grand total
+            });
+
+            function updateGrandTotal() {
+                var checkedCheckboxes = document.querySelectorAll('input[name="bus_id[]"]:checked');
+                totalBusInput.value = checkedCheckboxes.length;
+
+                var hargaStd = parseFloat(hargaStdInput.value);
+                var totalBus = parseInt(totalBusInput.value);
+                var totalDiskon = parseFloat(diskon.value);
+                var totalBiayaJemput = parseFloat(hargaBiayaJemput.value);
+
+                // Ensure values are valid numbers
+                if (isNaN(hargaStd)) {
+                    hargaStd = 0;
+                }
+                if (isNaN(totalBus)) {
+                    totalBus = 0;
+                }
+                if (isNaN(totalDiskon)) {
+                    totalDiskon = 0;
+                }
+                if (isNaN(totalBiayaJemput)) {
+                    totalBiayaJemput = 0;
+                }
+
+                // Calculate discount amount
+                var diskonAmount = hargaStd * (totalDiskon / 100);
+
+                // Calculate grand total
+                var grandTotal = (hargaStd - diskonAmount) * totalBus + totalBiayaJemput;
+
+                // Update the grand total input value
+                grandTotalInput.value = grandTotal.toFixed(); // Use toFixed(2) to format to two decimal places
+            }
+        });
 
         $(document).ready(function() {
             $('#tujuan_id').select2({
@@ -206,25 +280,36 @@
                             results: $.map(data, function(item) {
                                 return {
                                     id: item.id,
-                                    text: item.nama_tujuan + ' - ' + item.pemakaian
+                                    text: item.nama_tujuan + ' - ' + item.pemakaian + ' - ' + item.type_bus
                                 }
                             })
                         };
                     },
                 },
             }).on('change', function(e) {
-                var tujuanIds = $(this).val(); // Ambil semua tujuan_id yang dipilih
+                var tujuanId = $(this).val(); // Ambil tujuan_id yang dipilih
                 // Kirim permintaan AJAX untuk mendapatkan jumlah harga_std berdasarkan tujuan yang dipilih
                 $.ajax({
                     url: "{{ route('getTotalHargaStd') }}",
                     type: "post",
                     data: {
-                        tujuan_ids: tujuanIds,
+                        tujuan_id: tujuanId,
                         "_token": "{{ csrf_token() }}",
                     },
                     success: function(response) {
                         // Perbarui nilai tampilan dengan total harga_std yang diterima dari respons AJAX
                         $('#total_harga_std').val(response.total_harga_std);
+
+                        // Calculate grand total
+                        var hargaStd = parseFloat(response.total_harga_std);
+                        var totalBus = parseInt($('#total_bus').val());
+                        var totalDiskon = parseFloat($('#diskon').val());
+                        if (isNaN(totalDiskon)) {
+                            totalDiskon = 0; // Atur nilai diskon menjadi 0 jika tidak valid
+                        }
+                        var diskonAmount = hargaStd * (totalDiskon /
+                            100); // Calculate diskon amount
+                        $('#grand_total').val((hargaStd - diskonAmount) * totalBus);
                     },
                     error: function(xhr, status, error) {
                         console.error(xhr.responseText);
@@ -233,4 +318,5 @@
             });
         });
     </script>
+
 @endsection

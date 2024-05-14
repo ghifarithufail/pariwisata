@@ -28,4 +28,8 @@ class Booking_detail extends Model
     {
         return $this->belongsTo(Spj::class, 'id', 'booking_detail_id');
     }
+
+    public function pengemudis(){
+        return $this->belongsTo(Pengemudi::class, 'supir_id', 'id');
+    }
 }

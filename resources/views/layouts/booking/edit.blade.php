@@ -87,7 +87,7 @@
                                 @foreach ($booking->details as $detail)
                                     <tr>
                                         <td>{{ $detail->armadas->nobody }}</td>
-                                        <td>{{ $detail->supir_id }}</td>
+                                        <td>{{ $detail->pengemudis->nopengemudi }} - {{ $detail->pengemudis->users->name }}</td>
                                         <td>{{ $detail->Kondektur_id }}</td>
                                         <td class="text-center">
                                             <button type="button" class="btn btn-primary launch-modal"
@@ -128,9 +128,16 @@
                                                 </div>
                                                 <div class="row g-2">
                                                     <div class="col mb-0">
-                                                        <label for="supir_id" class="form-label">Supir</label>
-                                                        <input type="number" name="supir_id" id="supir_id"
-                                                            class="form-control">
+                                                        <label for="supir_id" class="form-label">Pengemudi</label>
+                                                        {{-- <input type="number" name="supir_id" id="supir_id"
+                                                            class="form-control"> --}}
+                                                        <select class="form-select" id="supir_id" name="supir_id"
+                                                            aria-label="Default select example" fdprocessedid="6aeghl">
+                                                            <option value="" selected disabled>Silahkan pilih pengemudi</option>
+                                                            @foreach ($pengemudi as $item)
+                                                                <option value="{{ $item->id }}"> {{ $item->nopengemudi }}</option>
+                                                            @endforeach
+                                                        </select>
                                                     </div>
                                                     <div class="col mb-0">
                                                         <label for="kondektur_id" class="form-label">Kondektur</label>

@@ -6,6 +6,7 @@ use App\Models\Armada;
 use App\Models\Booking;
 use App\Models\Booking_detail;
 use App\Models\Bus;
+use App\Models\Pengemudi;
 use App\Models\Tujuan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -77,9 +78,11 @@ class BookingController extends Controller
                 'telephone' => 'nullable',
                 'total_bus' => 'nullable',
                 'harga_std' => 'required',
-                'lokasi_jemput' => 'nullable',
-                'total_passanger' => 'nullable',
-                'tujuan_id' => 'nullable|array',
+                'grand_total' => 'required',
+                'keterangan' => 'nullable',
+                'biaya_jemput' => 'nullable',
+                'diskon' => 'nullable',
+                'tujuan_id' => 'nullable',
             ]);
 
             $booking = new Booking($validatedData);
@@ -94,7 +97,7 @@ class BookingController extends Controller
             $booking->no_booking = "BK/PP/" . date("Y") . "/" . $array_bln[date('n')] . "/" . $next;
             // $booking->harga_std = 2000000; // Misalnya harga std default
             // Ubah array tujuan_id menjadi string yang dipisahkan koma
-            $booking->tujuan_id = implode(',', $validatedData['tujuan_id']);
+            // $booking->tujuan_id = implode(',', $validatedData['tujuan_id']);
 
             $booking->save();
 
@@ -103,8 +106,8 @@ class BookingController extends Controller
                 $detail = new Booking_detail();
                 $detail->booking_id = $booking->id;
                 $detail->armada_id = $value;
-                $detail->supir_id = 1;
-                $detail->kondektur_id = 2;
+                // $detail->supir_id = 1;
+                // $detail->kondektur_id = 2;
                 $detail->save();
             }
 
@@ -133,9 +136,11 @@ class BookingController extends Controller
     public function edit($id)
     {
         $booking = Booking::find($id);
+        $pengemudi = Pengemudi::orderBy('created_at', 'desc')->get();
 
         return view('layouts.booking.edit', [
             'booking' => $booking,
+            'pengemudi' => $pengemudi,
 
         ]);
     }
@@ -196,13 +201,12 @@ class BookingController extends Controller
 
     public function getTotalHargaStd(Request $request)
     {
-        $tujuanIds = $request->tujuan_ids;
+        $tujuanId = $request->tujuan_id;
         $totalHargaStd = 0;
 
-        // Iterasi melalui semua tujuan yang dipilih
-        foreach ($tujuanIds as $tujuanId) {
+        if ($tujuanId) {
             $tujuan = Tujuan::findOrFail($tujuanId);
-            $totalHargaStd += $tujuan->harga_std;
+            $totalHargaStd = $tujuan->harga_std;
         }
 
         return response()->json(['total_harga_std' => $totalHargaStd]);

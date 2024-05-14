@@ -136,7 +136,7 @@
                     <tr>
                         <td width="170">Pengemudi</td>
                         <td width="1%">:</td>
-                        <td>{{ $spj->booking_details->supir_id }}</td>
+                        <td>{{ $spj->booking_details->pengemudis->users->name }} / {{ $spj->booking_details->pengemudis->nopengemudi }}</td>
                     </tr>
                     <tr>
                         <td width="170">No Induk / No Pol</td>
