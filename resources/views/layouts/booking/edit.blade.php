@@ -10,7 +10,7 @@
         <div class="card-body">
             <div class="card-header" style="zoom: 0.8">
                 <h4>
-                    Booking Detail {{ $booking->no_booking }}
+                    Booking Detail {{ $booking->start_date }}
                 </h4>
                 <hr>
                 <div class="row">
@@ -27,7 +27,7 @@
                             <label class="control-label col-sm-3">Start Date :</label>
                             <div class="col-sm-9">
                                 <input type="date"
-                                    value="{{ Carbon\Carbon::parse($booking->start_date)->format('Y-m-d') }}" disabled
+                                    value="{{ Carbon\Carbon::parse($booking->date_start)->format('Y-m-d') }}" disabled
                                     class="form-control" />
                             </div>
                         </div>
@@ -36,7 +36,7 @@
                             <label class="control-label col-sm-3">End Date</label>
                             <div class="col-sm-9">
                                 <input type="date"
-                                    value="{{ Carbon\Carbon::parse($booking->end_date)->format('Y-m-d') }}" disabled
+                                    value="{{ Carbon\Carbon::parse($booking->date_end)->format('Y-m-d') }}" disabled
                                     class="form-control" />
                             </div>
                         </div>
@@ -87,7 +87,7 @@
                                 @foreach ($booking->details as $detail)
                                     <tr>
                                         <td>{{ $detail->armadas->nobody }}</td>
-                                        <td>{{ $detail->pengemudis->nopengemudi }} - {{ $detail->pengemudis->users->name }}</td>
+                                        <td>{{ $detail->pengemudis ? $detail->pengemudis->nopengemudi : '' }} - {{ $detail->pengemudis ? $detail->pengemudis->users->name : '' }}</td>
                                         <td>{{ $detail->Kondektur_id }}</td>
                                         <td class="text-center">
                                             <button type="button" class="btn btn-primary launch-modal"
@@ -95,7 +95,8 @@
                                                 data-supir="{{ $detail->supir_id }}"
                                                 data-bus="{{ $detail->armadas->nobody }}"
                                                 data-kondektur="{{ $detail->Kondektur_id }}"
-                                                data-booking-id="{{ $detail->id }}">
+                                                data-booking-id="{{ $detail->id }}"
+                                                data-armada-id="{{ $detail->armada_id }}">
                                                 Launch modal
                                             </button>
                                             <input type="hidden" name="bookingId" id="bookingId"

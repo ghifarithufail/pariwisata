@@ -38,13 +38,20 @@
                 <div class="card-header" style="zoom: 0.8">
                     <form>
                         <div class="form-group row">
-                            <div class="col-sm-4 mt-2">
+                            <div class="col-sm-3 mt-2">
                                 <input type="date" class="form-control" placeholder="NIK" name="start"
                                     value="{{ $request['start'] }}" id="start">
                             </div>
-                            <div class="col-sm-4 mt-2">
+                            <div class="col-sm-3 mt-2">
                                 <input type="date" class="form-control" placeholder="NIK" name="end"
                                     value="{{ $request['end'] }}" id="end">
+                            </div>
+                            <div class="col-sm-3 mt-2">
+                                <select class="form-control input-goldbrand" name="type">
+                                    <option value="">- Choose Single / Double -</option>
+                                    <option value="SINGEL GLASS">SINGEL GLASS</option>
+                                    <option value="DOUBLE GLASS">DOUBLE GLASS</option>
+                                </select>
                             </div>
                             <div class="col-sm-3">
                                 <button type="submit" class="btn btn-primary rounded text-white mt-2 mr-2"

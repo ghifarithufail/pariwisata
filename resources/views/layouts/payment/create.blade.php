@@ -17,7 +17,7 @@
                     </div>
                     <p class="mb-1"><b>Yang Harus Dibayar</b></p>
                     <p class="mb-0">
-                        <span class="fw-medium me-1">{{number_format($booking->harga_std) ?? 0}}</span>
+                        <span class="fw-medium me-1">{{number_format($booking->grand_total) ?? 0}}</span>
                     </p>
                 </div>
             </div>
@@ -70,7 +70,7 @@
                     </div>
                     <p class="mb-1"><b>Selisih Pembayaran</b></p>
                     <p class="mb-0">
-                        <span class="fw-medium me-1">{{number_format($booking->harga_std - $booking->total_payment ?? 0)}}</span>
+                        <span class="fw-medium me-1">{{number_format($booking->grand_total - $booking->total_payment ?? 0)}}</span>
                     </p>
                 </div>
             </div>

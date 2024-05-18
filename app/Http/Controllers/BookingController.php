@@ -39,13 +39,18 @@ class BookingController extends Controller
 
         $bus = collect();
 
-        $bus = Armada::whereDoesntHave('booking_details.bookings', function ($query) use ($tanggal_mulai, $tanggal_akhir) {
+        $buses = Armada::whereDoesntHave('booking_details.bookings', function ($query) use ($tanggal_mulai, $tanggal_akhir) {
             $query->whereDate('date_start', '<=', $tanggal_akhir)
                 ->whereDate('date_end', '>=', $tanggal_mulai)
                 ->where('booking_status', 1);
         })
-            ->orderBy('id', 'asc')
-            ->get();
+            ->orderBy('id', 'asc');
+
+        if($request['type']){
+            $buses = $buses->where('keterangan', $request['type']);
+        }
+        
+        $bus = $buses->get();
 
         $allBusesFull = $bus->isEmpty();
 
@@ -133,7 +138,7 @@ class BookingController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id)
+    public function pengemudi($id)
     {
         $booking = Booking::find($id);
         $pengemudi = Pengemudi::orderBy('created_at', 'desc')->get();
@@ -210,5 +215,98 @@ class BookingController extends Controller
         }
 
         return response()->json(['total_harga_std' => $totalHargaStd]);
+    }
+
+    public function edit(Request $request, $id)
+    {
+        $booking = Booking::findOrFail($id);
+        $pengemudi = Pengemudi::orderBy('created_at', 'desc')->get();
+
+        $start = $request->input('start', now()->format('Y-m-d'));
+        $end = $request->input('end', now()->format('Y-m-d'));
+
+        $tanggal_mulai = date('Y-m-d', strtotime($request->input('start')));
+        $tanggal_akhir = date('Y-m-d', strtotime($request->input('end')));
+
+        $bus = collect();
+
+        $buses = Armada::whereDoesntHave('booking_details.bookings', function ($query) use ($tanggal_mulai, $tanggal_akhir) {
+            $query->whereDate('date_start', '<=', $tanggal_akhir)
+                ->whereDate('date_end', '>=', $tanggal_mulai)
+                ->where('booking_status', 1);
+        })
+            ->orderBy('id', 'asc');
+
+        if($request['type']){
+            $buses = $buses->where('keterangan', $request['type']);
+        }
+        
+        $bus = $buses->get();
+
+        $allBusesFull = $bus->isEmpty();
+
+        return view('layouts.booking.editReservation', [
+            'booking' => $booking,
+            'pengemudi' => $pengemudi,
+            'bus' => $bus,
+            'allBusesFull' => $allBusesFull,
+            'request' => [
+                'start' => $start,
+                'end' => $end,
+            ],
+        ]);
+    }
+
+    public function updateBusReservation(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $bookingId = $request->input('booking_id');
+            $detail = Booking_detail::where('id', $bookingId)->first();
+
+
+            if (!$detail) {
+                return response()->json(['error' => 'Booking detail not found'], 404);
+            }
+
+            $detail->armada_id = $request->input('bus_id');
+            $detail->save();
+
+            DB::commit();
+
+            return response()->json(['success' => 'Data updated successfully'], 200);
+        } catch (\Exception $e) {
+            DB::rollback();
+            \Log::error($e);
+            return response()->json(['error' => $e->getMessage()], 422);
+        }
+    }
+
+    public function updateDateReservation(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $bookingId = $request->input('booking_id');
+            $booking = Booking::where('id', $bookingId)->first();
+
+            if (!$booking) {
+                return response()->json(['error' => 'Booking not found'], 404);
+            }
+
+            $booking->date_start = $request->input('start');
+            $booking->date_end = $request->input('end');
+            $booking->save();
+
+
+            DB::commit();
+
+            return response()->json(['success' => 'Data updated successfully'], 200);
+        } catch (\Exception $e) {
+            DB::rollback();
+            \Log::error($e);
+            return response()->json(['error' => $e->getMessage()], 422);
+        }
     }
 }

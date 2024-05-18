@@ -13,7 +13,7 @@
                         <th>Telephone</th>
                         <th>Tanggal Awal</th>
                         <th>Tanggal Akhir</th>
-                        <th>Penjemputan</th>
+                        {{-- <th>Penjemputan</th> --}}
                         <th>Tujuan</th>
                         <th class="text-center">Actions</th>
                     </tr>
@@ -26,22 +26,25 @@
                             <td>{{ $data->telephone }}</td>
                             <td>{{ $data->date_start }}</td>
                             <td>{{ $data->date_end }}</td>
-                            <td>{{ $data->lokasi_jemput }}</td>
+                            {{-- <td>{{ $data->lokasi_jemput }}</td> --}}
                             <td>
                                 @foreach ($data->tujuans() as $item)
                                     {{ $item->nama_tujuan }}
-                                    @if (!$loop->last),
+                                    @if (!$loop->last)
+                                        ,
                                     @endif
                                 @endforeach
                             </td>
 
                             <td>
-                                <div class="dropdown text-center">
-                                    <a href="{{ route('booking/edit', $data->id) }}">
-                                        <button type="button" class="btn rounded-pill btn-warning"
-                                            fdprocessedid="c80zr4">detail</button>
-                                    </a>
-                                </div>
+                                <a href="{{ route('booking/pengemudi', $data->id) }}">
+                                    <button type="button" class="btn rounded-pill btn-primary" fdprocessedid="c80zr4">Input
+                                        Supir</button>
+                                </a>
+                                <a href="{{ route('booking/edit', $data->id) }}">
+                                    <button type="button" class="btn rounded-pill btn-warning"
+                                        fdprocessedid="c80zr4">detail</button>
+                                </a>
                             </td>
                         </tr>
                     @endforeach

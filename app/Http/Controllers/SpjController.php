@@ -173,9 +173,18 @@ class SpjController extends Controller
 
             $sisa_uang_jalan = $spj->where('booking_detail_id' , $spj->booking_detail_id)->sum('sisa_uang_jalan');
             $detail = Booking_detail::where('id', $spj->booking_detail_id)->first();
+
             $detail->is_in = 1;
             $detail->total_sisa_uang_jalan = $sisa_uang_jalan;
             $detail->save();
+
+
+            $booking = Booking::where('id', $detail->booking_id)->first();
+            $pendapatan = Booking_detail::where('booking_id', $detail->booking_id)->sum('total_sisa_uang_jalan');
+
+            $booking->total_pendapatan = $booking->grand_total - $pendapatan;
+            $booking->save();
+
 
             DB::commit();
             return redirect('spj/print/in/' . $spj->id)->with('success', 'SPJ berhasil Dibuat');

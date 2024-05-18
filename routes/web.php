@@ -24,11 +24,16 @@ Route::prefix('booking')->group(function () {
     Route::get('/', [BookingController::class, 'index'])->name('booking');
     Route::get('/create', [BookingController::class, 'create'])->name('booking/create');
     Route::post('/store', [BookingController::class, 'store'])->name('booking/store');
-    Route::get('/edit/{id}', [BookingController::class, 'edit'])->name('booking/edit');
+    Route::get('/pengemudi/{id}', [BookingController::class, 'pengemudi'])->name('booking/pengemudi');
     Route::post('/update-data', [BookingController::class, 'update'])->name('booking/update');
     Route::get('/jadwal', [BookingController::class, 'jadwal'])->name('jadwal');
     Route::post('/getTujuan', [BookingController::class, 'getTujuan'])->name('getTujuan');
     Route::post('/getTotalHargaStd', [BookingController::class, 'getTotalHargaStd'])->name('getTotalHargaStd');
+    Route::get('/edit/{id}', [BookingController::class, 'edit'])->name('booking/edit');
+    Route::post('/update-reservation', [BookingController::class, 'updateBusReservation'])->name('booking/update');
+    Route::post('/update-date', [BookingController::class, 'updateDateReservation'])->name('booking/update/date');
+
+
 
 });
 
