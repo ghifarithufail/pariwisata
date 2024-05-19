@@ -16,9 +16,12 @@ class JabatanController extends Controller
         $search = $request->query('search');
         $page = $request->input('page', 1);
 
-        $jabatan = Jabatan::with('details')->orderBy('created_at', 'asd')->get();
+        $jabatan = Jabatan::where('nama_jabatan', 'LIKE', "%$search%")
+        ->paginate(10, ['*'], 'page', $page); // Mengatur jumlah item per halaman menjadi 10
 
-        return view('layouts.admin.jabatan.index', compact('jabatan'));
+        return view('layouts.admin.jabatan.index', [
+            'jabatans' => $jabatan,
+        ]);
     }
 
     /**
@@ -34,8 +37,26 @@ class JabatanController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Melakukan validasi data
+        $validatedData = $request->validate([
+            'nama_jabatan' => 'required|unique:jabatans,nama_jabatan',
+            'kodejab' => 'nullable',
+        ]);
+
+        try {
+
+            $jabatan = Jabatan::create([
+                'nama_jabatan' => $validatedData['nama_jabatan'],
+                'kodejab' => $validatedData['kodejab'],
+            ]);
+
+            return redirect()->route('jabatan')->with('success', 'Data jabatan berhasil ditambahkan!');
+
+            } catch (\Exception $e) {
+                return redirect()->route('jabatan')->with('error', 'Data jabatan gagal ditambahkan!');
+                }
     }
+
 
     /**
      * Display the specified resource.
@@ -48,17 +69,40 @@ class JabatanController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Jabatan $jabatan)
+    public function edit(string $id)
     {
-        //
+
+        $jabatan = Jabatan::findOrFail($id);
+
+        return view('layouts.admin.jabatan.edit', compact('jabatan'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Jabatan $jabatan)
+    public function update(Request $request, string $id)
     {
-        //
+            // Melakukan validasi data
+        $validatedData = $request->validate([
+            'nama_jabatan' => 'required|unique:jabatans,nama_jabatan,' . $id,
+            'kodejab' => 'nullable',
+        ]);
+
+        try {
+            // Mengambil data jabatan berdasarkan ID
+            $jabatan = Jabatan::findOrFail($id);
+
+            // Memperbarui data jabatan dengan data yang baru
+            $jabatan->update([
+                'nama_jabatan' => $validatedData['nama_jabatan'],
+                'kodejab' => $validatedData['kodejab'],
+            ]);
+
+            return redirect()->route('jabatan')->with('success', 'Data jabatan berhasil diperbarui!');
+        } catch (\Exception $e) {
+            return redirect()->route('jabatan')->with('error', 'Data jabatan gagal diperbarui!');
+        }
+
     }
 
     /**

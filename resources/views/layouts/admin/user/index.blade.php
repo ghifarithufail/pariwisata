@@ -59,8 +59,9 @@
                             <td>
                                 <div class="dropdown text-center">
                                     <a href="{{ route('users/edit', $data->id) }}">
-                                        <button type="button" class="btn rounded-pill btn-warning"
-                                            fdprocessedid="c80zr4">Edit</button>
+                                        <button type="button" class="btn rounded-pill btn-icon btn-warning">
+                                            <span class="tf-icons bx bx-edit"></span>
+                                        </button>
                                     </a>
                                 </div>
                             </td>

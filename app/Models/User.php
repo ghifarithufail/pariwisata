@@ -3,10 +3,12 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Hrd\Biodata;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -62,6 +64,11 @@ class User extends Authenticatable
     public function getRoles()
     {
         return $this->roles()->pluck('name')->toArray();
+    }
+
+    public function biodata(): HasOne
+    {
+        return $this->hasOne(Biodata::class);
     }
 
 }

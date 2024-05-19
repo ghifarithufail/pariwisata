@@ -2,21 +2,14 @@
 
 namespace App\Http\Controllers;
 
-<<<<<<< HEAD
-use Illuminate\Support\Facades\Log;
-=======
-use App\Models\Armada;
-use App\Models\Booking;
-use App\Models\Booking_detail;
-use App\Models\Bus;
-use App\Models\Tujuan;
->>>>>>> 58a899bc6e996162abe3c00683ee6b15426fe411
 use Carbon\Carbon;
-use App\Models\Bus;
+use App\Models\Armada;
+use App\Models\Tujuan;
 use App\Models\Booking;
 use Illuminate\Http\Request;
 use App\Models\Booking_detail;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class BookingController extends Controller
 {

@@ -47,8 +47,9 @@
                         <td>
                             <div class="dropdown text-center">
                                 <a href="{{ route('roles/edit', $role->id) }}">
-                                    <button type="button" class="btn rounded-pill btn-warning"
-                                        fdprocessedid="c80zr4">Edit</button>
+                                    <button type="button" class="btn rounded-pill btn-icon btn-warning">
+                                        <span class="tf-icons bx bx-edit"></span>
+                                    </button>
                                 </a>
                             </div>
                         </td>
@@ -56,6 +57,11 @@
                 @endforeach
             </tbody>
             </table>
+        </div>
+        <div class="intro-y col-span-12">
+            <div class="card-footer">
+                {{ $roles->onEachSide(1)->links('pagination::bootstrap-5') }}
+            </div>
         </div>
         </div>
     </div>

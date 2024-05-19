@@ -27,7 +27,7 @@ class UserController extends Controller
 
         $roles = Role::all();
 
-        return view('layouts.admin.user.index', compact('users', 'roles'));
+        return view('layouts.admin.user.index', ['users' => $users, 'roles' => $roles]);
     }
 
 

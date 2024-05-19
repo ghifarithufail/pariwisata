@@ -60,11 +60,7 @@ class SpjController extends Controller
     public function keluar(Request $request, $id)
     {
         try {
-<<<<<<< HEAD
-            $detail = Booking_detail::where('id',$id)->first();
-=======
             $detail = Booking_detail::where('id', $id)->first();
->>>>>>> 58a899bc6e996162abe3c00683ee6b15426fe411
 
 
             $count = Spj::whereMonth("created_at", date("m"))
@@ -149,7 +145,7 @@ class SpjController extends Controller
             return redirect('spj/print/out/' . $spj->id)->with('success', 'SPJ berhasil Dibuat');
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::info($e);
+            Log::info($e);
 
             // return redirect()->route('payment')->with('error', 'Gagal menyimpan Pembayaran ' . $e->getMessage());
             return redirect('spj/print/out/' . $spj->id)->with('error', 'Gagal membuat SPJ ' . $e->getMessage());
@@ -186,7 +182,7 @@ class SpjController extends Controller
             return redirect('spj/print/in/' . $spj->id)->with('success', 'SPJ berhasil Dibuat');
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::info($e);
+            Log::info($e);
             return redirect('spj/print/in/' . $spj->id)->with('error', 'Gagal menyimpan Pembayaran ' . $e->getMessage());
         }
     }
@@ -194,11 +190,7 @@ class SpjController extends Controller
     public function masuk(Request $request, $id)
     {
         try {
-<<<<<<< HEAD
-            $detail = Booking_detail::where('id',$id)->first();
-=======
             $detail = Booking_detail::where('id', $id)->first();
->>>>>>> 58a899bc6e996162abe3c00683ee6b15426fe411
 
             $count = Spj::whereMonth("created_at", date("m"))
                 ->whereYear("created_at", date("Y"))
