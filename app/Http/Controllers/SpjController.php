@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Booking;
-use App\Models\Booking_detail;
 use App\Models\Spj;
+use App\Models\Booking;
 use Illuminate\Http\Request;
+use App\Models\Booking_detail;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class SpjController extends Controller
 {
@@ -83,7 +84,7 @@ class SpjController extends Controller
             return redirect('spj/print/out/' . $spj->id);
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::info($e);
+            Log::info($e);
 
             return redirect()->back()->with('error', 'Gagal Membuat SPJ Keluar ' . $e->getMessage());
         }
@@ -144,7 +145,7 @@ class SpjController extends Controller
             return redirect('spj/print/out/' . $spj->id)->with('success', 'SPJ berhasil Dibuat');
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::info($e);
+            Log::info($e);
 
             // return redirect()->route('payment')->with('error', 'Gagal menyimpan Pembayaran ' . $e->getMessage());
             return redirect('spj/print/out/' . $spj->id)->with('error', 'Gagal membuat SPJ ' . $e->getMessage());
@@ -192,7 +193,7 @@ class SpjController extends Controller
             return redirect('spj/print/in/' . $spj->id)->with('success', 'SPJ berhasil Dibuat');
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::info($e);
+            Log::info($e);
             return redirect('spj/print/in/' . $spj->id)->with('error', 'Gagal menyimpan Pembayaran ' . $e->getMessage());
         }
     }
@@ -224,7 +225,7 @@ class SpjController extends Controller
         } catch (\Exception $e) {
 
             DB::rollBack();
-            \Log::info($e);
+            Log::info($e);
 
             return redirect()->back()->with('error', 'Gagal Membuat SPJ Masuk ' . $e->getMessage());
         }

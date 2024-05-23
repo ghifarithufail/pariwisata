@@ -11,6 +11,7 @@ use App\Models\Tujuan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class BookingController extends Controller
 {
@@ -127,7 +128,7 @@ class BookingController extends Controller
             return redirect()->back()->with('success', 'Data berhasil disimpan');
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::info($e);
+            Log::info($e);
 
             return redirect()->back()->with('error', 'Gagal menyimpan data: ' . $e->getMessage());
         }
@@ -181,7 +182,7 @@ class BookingController extends Controller
             return response()->json(['success' => 'Data updated successfully'], 200);
         } catch (\Exception $e) {
             DB::rollback();
-            \Log::error($e);
+            Log::error($e);
             return response()->json(['error' => $e->getMessage()], 422);
         }
     }

@@ -49,7 +49,7 @@
                 </svg>
 
             </span>
-            <span class="app-brand-text demo menu-text fw-bold ms-2">Walkot</span>
+            <span class="app-brand-text demo menu-text fw-bold ms-2">Redwhite Star</span>
         </a>
 
         <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">
@@ -72,6 +72,100 @@
             <span class="menu-header-text">Pages</span>
         </li>
 
+        <li class="menu-item" style="">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-layout"></i>
+                <div data-i18n="Administrator">Administrator</div>
+            </a>
+
+            <ul class="menu-sub">
+                <li class="menu-item">
+                    <a href="{{ route('roles') }}" class="menu-link">
+                        <div data-i18n="Roles">Role</div>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="{{ route('users') }}" class="menu-link">
+                        <div data-i18n="Users">Users</div>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="{{ route('pool') }}" class="menu-link">
+                        <div data-i18n="Pool">Pool</div>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="{{ route('rute') }}" class="menu-link">
+                        <div data-i18n="Rute">Rute</div>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="{{ route('armada') }}" class="menu-link">
+                        <div data-i18n="Armada">Armada</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- ELEMENT -->
+        <li class="menu-item" style="">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-layout"></i>
+                <div data-i18n="Element">Element</div>
+            </a>
+
+            <ul class="menu-sub">
+                <li class="menu-item">
+                    <a href="{{ route('provinsi') }}" class="menu-link">
+                        <div data-i18n="Provinsi">Provinsi</div>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="{{ route('kota') }}" class="menu-link">
+                        <div data-i18n="Kota">Kota</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+       <!-- HRD -->
+       <li class="menu-item" style="">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-layout"></i>
+                <div data-i18n="HRD">HRD</div>
+            </a>
+
+            <ul class="menu-sub">
+                <li class="menu-item">
+                    <a href="{{ route('jabatan') }}" class="menu-link">
+                        <div data-i18n="Jabatan">Jabatan</div>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="{{ route('biodata') }}" class="menu-link">
+                        <div data-i18n="Biodata">Biodata</div>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="{{ route('karyawan') }}" class="menu-link">
+                        <div data-i18n="Karyawan">Karyawan</div>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="{{ route('pengemudi') }}" class="menu-link">
+                        <div data-i18n="Pengemudi">Pengemudi</div>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="{{ route('kondektur') }}" class="menu-link">
+                        <div data-i18n="Kondektur">Kondektur</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <!-- END HRD -->
+
+        <!-- CSO -->
         <li class="menu-item" style="">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-layout"></i>
