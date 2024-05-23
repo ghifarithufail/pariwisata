@@ -136,7 +136,7 @@
                                                             aria-label="Default select example" fdprocessedid="6aeghl">
                                                             <option value="" selected disabled>Silahkan pilih pengemudi</option>
                                                             @foreach ($pengemudi as $item)
-                                                                <option value="{{ $item->id }}"> {{ $item->nopengemudi }}</option>
+                                                                <option value="{{ $item->id }}"> {{ $item->nopengemudi }} - {{ $item->users->name}}</option>
                                                             @endforeach
                                                         </select>
                                                     </div>

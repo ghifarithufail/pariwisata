@@ -62,14 +62,18 @@ class PaymentController extends Controller
                 'image' => 'required',
 
             ]);
-
+            
+            
             $payment = new Payment($validatedData);
+            $booking = Booking::where('id', $payment->booking_id)->first();
+
             $payment->image = $request->file('image')->store('payments');
             $payment->save();
+            
 
+            
             $totalPayment = $payment->where('booking_id', $payment->booking_id)->sum('price');
 
-            $booking = Booking::where('id', $payment->booking_id)->first();
             $booking->total_payment = $totalPayment;
             $booking->save();
 

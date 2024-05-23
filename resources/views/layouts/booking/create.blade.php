@@ -213,7 +213,6 @@
             var diskon = document.getElementById('diskon');
             var grandTotalInput = document.getElementById('grand_total');
 
-
             // Event listener untuk perubahan pada checkbox bus
             checkboxes.forEach(function(checkbox) {
                 checkbox.addEventListener('change', function() {
@@ -256,14 +255,17 @@
                     totalBiayaJemput = 0;
                 }
 
-                // Calculate discount amount
-                var diskonAmount = hargaStd * (totalDiskon / 100);
+                // Ensure the discount is not more than the total price
+                var totalHarga = hargaStd * totalBus;
+                if (totalDiskon > totalHarga) {
+                    totalDiskon = totalHarga;
+                }
 
                 // Calculate grand total
-                var grandTotal = (hargaStd - diskonAmount) * totalBus + totalBiayaJemput;
+                var grandTotal = totalHarga - totalDiskon + totalBiayaJemput;
 
                 // Update the grand total input value
-                grandTotalInput.value = grandTotal.toFixed(); // Use toFixed(2) to format to two decimal places
+                grandTotalInput.value = grandTotal.toFixed(0); // Use toFixed(2) to format to two decimal places
             }
         });
 
@@ -287,7 +289,8 @@
                             results: $.map(data, function(item) {
                                 return {
                                     id: item.id,
-                                    text: item.nama_tujuan + ' - ' + item.pemakaian + ' - ' + item.type_bus
+                                    text: item.nama_tujuan + ' - ' + item.pemakaian + ' - ' +
+                                        item.type_bus
                                 }
                             })
                         };
@@ -314,9 +317,8 @@
                         if (isNaN(totalDiskon)) {
                             totalDiskon = 0; // Atur nilai diskon menjadi 0 jika tidak valid
                         }
-                        var diskonAmount = hargaStd * (totalDiskon /
-                            100); // Calculate diskon amount
-                        $('#grand_total').val((hargaStd - diskonAmount) * totalBus);
+                        var diskonAmount = hargaStd - totalDiskon; // Calculate diskon amount
+                        $('#grand_total').val(diskonAmount * totalBus);
                     },
                     error: function(xhr, status, error) {
                         console.error(xhr.responseText);

@@ -169,7 +169,7 @@ class SpjController extends Controller
 
             $spj = Spj::where('id', $request->spj_id)->first();
             $spj->sisa_uang_jalan = $spj->uang_jalan - $pengeluaran - $spj->biaya_lain;
-            $spj->pengeluaran = $pengeluaran;
+            $spj->pengeluaran = $pengeluaran + $spj->biaya_lain;
             $spj->type = 2;
             $spj->update($validatedData);
 
@@ -178,7 +178,7 @@ class SpjController extends Controller
 
             $detail->is_in = 1;
             $detail->total_sisa_uang_jalan = $sisa_uang_jalan;
-            $detail->total_pengeluaran = $pengeluaran;
+            $detail->total_pengeluaran = $pengeluaran + $spj->biaya_lain;;
             $detail->save();
 
 
