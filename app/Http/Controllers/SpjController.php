@@ -65,7 +65,6 @@ class SpjController extends Controller
 
             $count = Spj::whereMonth("created_at", date("m"))
                 ->whereYear("created_at", date("Y"))
-                ->where('type', '1')
                 ->count();
 
             $next = $count + 1;
@@ -102,7 +101,8 @@ class SpjController extends Controller
         ]);
     }
 
-    public function print($id){
+    public function print($id)
+    {
         $spj = Spj::find($id);
 
         return view('layouts.spj.out', [
@@ -173,7 +173,7 @@ class SpjController extends Controller
             $spj->type = 2;
             $spj->update($validatedData);
 
-            $sisa_uang_jalan = $spj->where('booking_detail_id' , $spj->booking_detail_id)->sum('sisa_uang_jalan');
+            $sisa_uang_jalan = $spj->where('booking_detail_id', $spj->booking_detail_id)->sum('sisa_uang_jalan');
             $detail = Booking_detail::where('id', $spj->booking_detail_id)->first();
 
             $detail->is_in = 1;

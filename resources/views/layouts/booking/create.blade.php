@@ -317,8 +317,8 @@
                         if (isNaN(totalDiskon)) {
                             totalDiskon = 0; // Atur nilai diskon menjadi 0 jika tidak valid
                         }
-                        var diskonAmount = hargaStd - totalDiskon; // Calculate diskon amount
-                        $('#grand_total').val(diskonAmount * totalBus);
+                        // var diskonAmount = hargaStd - totalDiskon; // Calculate diskon amount
+                        $('#grand_total').val((hargaStd * totalBus) - totalDiskon);
                     },
                     error: function(xhr, status, error) {
                         console.error(xhr.responseText);

@@ -17,7 +17,7 @@ class PaymentController extends Controller
     public function index()
     {
 
-        $booking = Booking::with('payments')->orderBy('created_at', 'desc')->get();
+        $booking = Booking::with('payments')->where('payment_status', '2')->orderBy('created_at', 'desc')->get();
 
         return view('layouts.payment.index', [
             'booking' => $booking,
