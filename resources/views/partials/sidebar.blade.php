@@ -89,6 +89,11 @@
                         <div data-i18n="Tambah Booking">Tambah Booking</div>
                     </a>
                 </li>
+                <li class="menu-item">
+                    <a href="{{ route('booking/report') }}" class="menu-link">
+                        <div data-i18n="Report">Report</div>
+                    </a>
+                </li>
                 {{-- <li class="menu-item">
                     <a href="layouts-without-navbar.html" class="menu-link">
                         <div data-i18n="Without navbar">Without navbar</div>
@@ -138,7 +143,7 @@
 
             <ul class="menu-sub">
                 <li class="menu-item">
-                    <a href="{{ route('payment') }}" class="menu-link">
+                    <a href="{{ route('jadwal') }}" class="menu-link">
                         <div data-i18n="Jadwal">Jadwal</div>
                     </a>
                 </li>

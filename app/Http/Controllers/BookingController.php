@@ -46,10 +46,10 @@ class BookingController extends Controller
         })
             ->orderBy('id', 'asc');
 
-        if($request['type']){
+        if ($request['type']) {
             $buses = $buses->where('keterangan', $request['type']);
         }
-        
+
         $bus = $buses->get();
 
         $allBusesFull = $bus->isEmpty();
@@ -61,6 +61,15 @@ class BookingController extends Controller
                 'start' => $start,
                 'end' => $end,
             ],
+        ]);
+    }
+
+    public function report()
+    {
+        $booking = Booking::with('details')->orderBy('created_at', 'DESC')->get();
+
+        return view('layouts.booking.report', [
+            'booking' => $booking,
         ]);
     }
 
@@ -100,9 +109,6 @@ class BookingController extends Controller
             $array_bln = array(1 => "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII");
 
             $booking->no_booking = "BK/PP/" . date("Y") . "/" . $array_bln[date('n')] . "/" . $next;
-            // $booking->harga_std = 2000000; // Misalnya harga std default
-            // Ubah array tujuan_id menjadi string yang dipisahkan koma
-            // $booking->tujuan_id = implode(',', $validatedData['tujuan_id']);
 
             $booking->save();
 
@@ -111,8 +117,9 @@ class BookingController extends Controller
                 $detail = new Booking_detail();
                 $detail->booking_id = $booking->id;
                 $detail->armada_id = $value;
-                // $detail->supir_id = 1;
-                // $detail->kondektur_id = 2;
+                $detail->harga_std = $request->harga_std;
+                $detail->diskon = $request->diskon;
+                $detail->total_harga = $detail->harga_std - ($detail->harga_std * ($detail->diskon / 100));
                 $detail->save();
             }
 
@@ -165,7 +172,6 @@ class BookingController extends Controller
                 return response()->json(['error' => 'Booking detail not found'], 404);
             }
 
-            // Now that you have the model instance, you can update its properties
             $detail->supir_id =  $request->input('supir_id');
             $detail->Kondektur_id = $request->input('kondektur_id');
             $detail->save();
@@ -183,10 +189,15 @@ class BookingController extends Controller
 
     public function jadwal()
     {
+
         $jadwal = Booking_detail::whereHas('bookings', function ($bookings) {
-            $bookings->whereDate('date_start', '>=', Carbon::now())
-                ->whereDate('date_end', '<=', Carbon::now());
-        })->get();
+            $endOfMonth = Carbon::now()->endOfMonth()->toDateString();
+            $startOfMonth = Carbon::now()->startOfMonth()->toDateString();
+            
+            $bookings->whereDate('date_start', '>=', $startOfMonth)
+                ->whereDate('date_end', '<=', $endOfMonth);
+        })
+            ->whereNotNull('supir_id')->get();
 
         // $jadwal = Booking::with('details')->whereDate('date_start', '>=', Carbon::now())
         // ->whereDate('date_end', '<=', Carbon::now())->get();
@@ -237,10 +248,10 @@ class BookingController extends Controller
         })
             ->orderBy('id', 'asc');
 
-        if($request['type']){
+        if ($request['type']) {
             $buses = $buses->where('keterangan', $request['type']);
         }
-        
+
         $bus = $buses->get();
 
         $allBusesFull = $bus->isEmpty();

@@ -9,22 +9,22 @@
                 <thead>
                     <tr>
                         <th>Supir</th>
-                        <th>Kondektur</th>
-                        <th>Nama Customer</th>
                         <th>No Booking</th>
                         <th>Bus</th>
+                        <th>Tujuan</th>
+                        <th>Tanggal Mulai</th>
+                        <th>Tanggal Akhir</th>
                     </tr>
                 </thead>
                 <tbody class="table-border-bottom-0">
                     @foreach ($jadwal as $data)
                         <tr>
-                            <td>{{ $data->supir_id }}</td>
-                            <td>{{ $data->Kondektur_id }}</td>
-                            <td>{{ $data->bookings->customer }}</td>
+                            <td>{{ $data->pengemudis ? $data->pengemudis->users->name : '' }}</td>
                             <td>{{ $data->bookings->no_booking }}</td>
-                            <td>{{ $data->bus_id }}</td>
-                            <td>{{ $data->bookings->tujuan_id }}</td>
-                            <td>{{ $data->bookings->lokasi_jemput }}</td>
+                            <td>{{ $data->armadas->nobody }}</td>
+                            <td>{{ $data->bookings->tujuan->nama_tujuan }}</td>
+                            <td>{{ $data->bookings->date_start }}</td>
+                            <td>{{ $data->bookings->date_end }}</td>
                             <td>
                                 <div class="dropdown text-center">
                                     <a href="{{ route('booking/edit', $data->id) }}">

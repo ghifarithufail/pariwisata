@@ -20,6 +20,11 @@ class Booking extends Model
         return $this->hasMany(Booking_detail::class, 'booking_id', 'id');
     }
 
+    public function tujuan(){
+        return $this->belongsTo(Tujuan::class, 'tujuan_id', 'id');
+
+    }
+
     public function tujuans(){
         // Explode the comma-separated IDs
         $tujuanIds = explode(',', $this->tujuan_id);
