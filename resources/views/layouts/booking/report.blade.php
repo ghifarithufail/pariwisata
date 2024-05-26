@@ -1,60 +1,118 @@
 @extends('main')
 @section('content')
-    <div class="card text-center">
-        <h5 class="card-header">Bookings Report</h5>
-    </div>
-    <div class="card mt-4">
-        <div class="table-responsive text-nowrap">
-            <table class="table table-hover" style="zoom: 0.75">
-                <thead>
-                    <tr>
-                        <th>No Booking</th>
-                        <th>Nama</th>
-                        <th>Telephone</th>
-                        <th>Tanggal Awal</th>
-                        <th>Tanggal Akhir</th>
-                        <th>Bus</th>
-                        <th>Tujuan</th>
-                        <th>Biaya Jemput</th>
-                        <th>Harga Standar</th>
-                        <th>Diskon</th>
-                        <th>Total Harga</th>
-                        {{-- <th class="text-center">Actions</th> --}}
-                    </tr>
-                </thead>
-                <tbody class="table-border-bottom-0">
-                    @php
-                        $previousBookingId = null;
-                    @endphp
-                    @foreach ($booking as $data)
-                        @foreach ($data->details as $item)
-                            <tr>
-                                <td>{{ $data->no_booking }}</td>
-                                <td>{{ $data->customer }}</td>
-                                <td>{{ $data->telephone }}</td>
-                                <td>{{ $data->date_start }}</td>
-                                <td>{{ $data->date_end }}</td>
-                                <td>{{ $item->armadas->nobody }}</td>
-                                <td>{{ $data->tujuan->nama_tujuan }}</td>
-                                <td>
-                                    @if ($previousBookingId !== $data->id)
-                                        {{ number_format($data->biaya_jemput) }}
-                                    @else
-                                        0
-                                    @endif
-                                </td>
-                                <td>{{ number_format($item->harga_std) }}</td>
-                                <td>{{ number_format($item->diskon) }}%</td>
-                                <td>{{ number_format($item->total_harga) }}</td>
-                            </tr>
-                            @php
-                                $previousBookingId = $data->id;
-                            @endphp
-                        @endforeach
-                    @endforeach
+<div class="card text-center">
+    <h5 class="card-header">Bookings Report</h5>
+</div>
 
-                </tbody>
+@php
+    $totalSum = 0;
+    $totalPendapatan = 0;
+@endphp
+@foreach ($booking as $data)
+    @php
+        $bookingTotal = 0;
+        foreach ($data->details as $item) {
+            $difference = $item->harga_std - $item->total_pengeluaran;
+            $totalSum += $difference;
+            $bookingTotal += $difference;
+        }
+        $totalPendapatanPerBooking = ($bookingTotal + $data->biaya_jemput) - $data->diskon;
+        $totalPendapatan += $totalPendapatanPerBooking;
+    @endphp
+@endforeach
+<div class="card text-center mt-4">
+    <h5 class="card-header">Jumlah Pendapatan : {{ number_format($totalPendapatan) }}</h5>
+</div>
+@foreach ($booking as $data)
+    <div class="card mt-4">
+        <div class="card-body">
+            <table class="table table-bordered">
+                <tr>
+                    <td width="170"><strong>No Booking</strong></td>
+                    <td width="1%">:</td>
+                    <td>{{ $data->no_booking }}</td>
+                </tr>
+                <tr>
+                    <td width="170"><strong>Nama</strong></td>
+                    <td width="1%">:</td>
+                    <td>{{ $data->customer }}</td>
+                </tr>
+                <tr>
+                    <td width="170"><strong>Telephone</strong></td>
+                    <td width="1%">:</td>
+                    <td>0{{ $data->telephone }}</td>
+                </tr>
+                <tr>
+                    <td width="170"><strong>Tujuan</strong></td>
+                    <td width="1%">:</td>
+                    <td>{{ $data->tujuan->nama_tujuan }}</td>
+                </tr>
             </table>
         </div>
     </div>
+    <div class="card mt-4">
+        <div class="card-body">
+            <div class="table-responsive text-nowrap">
+                <table class="table table-bordered">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Nama</th>
+                            <th style="text-align: right">Harga</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php
+                            $bookingTotal = 0;
+                        @endphp
+                        @foreach ($data->details as $item)
+                            @php
+                                $difference = $item->harga_std - $item->total_pengeluaran;
+                                $bookingTotal += $difference;
+                            @endphp
+                            <tr>
+                                <td><b>Bus</b></td>
+                                <td style="text-align: right"><b><i>{{ $item->armadas->nobody }}</i></b></td>
+                            </tr>
+                            <tr>
+                                <td>Harga</td>
+                                <td style="text-align: right">{{ number_format($item->harga_std) }}</td>
+                            </tr>
+                            <tr>
+                                <td>Pengeluaran</td>
+                                <td style="text-align: right">{{ number_format($item->total_pengeluaran) }}</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right">Total</td>
+                                <td style="text-align: right"><b>{{ number_format($difference) }}</b></td>
+                            </tr>
+                        @endforeach
+                        <tr>
+                            <th style="text-align: right">Jumlah : </th>
+                            <th style="text-align: right"><b>{{ number_format($bookingTotal) }}</b></th>
+                        </tr>
+                        <tr>
+                            <th style="text-align: right">Biaya Jemput : </th>
+                            <th style="text-align: right">{{ number_format($data->biaya_jemput) }}</th>
+                        </tr>
+                        <tr>
+                            <th style="text-align: right">Diskon : </th>
+                            @if ($data->diskon)
+                                <th style="text-align: right">-{{ number_format($data->diskon) }}</th>
+                            @else
+                                <th style="text-align: right">0</th>
+                            @endif
+                        </tr>
+                        @php
+                            $totalPendapatanPerBooking = $bookingTotal + $data->biaya_jemput - $data->diskon;
+                        @endphp
+                        <tr>
+                            <th style="text-align: right">Total Pendapatan : </th>
+                            <th style="text-align: right"><b>{{ number_format($totalPendapatanPerBooking) }}</b></th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+@endforeach
 @endsection

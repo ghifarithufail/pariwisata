@@ -113,13 +113,15 @@ class BookingController extends Controller
 
             $booking->save();
 
+            $diskon = $request->diskon / $request->total_bus ;
+
             foreach ($request->input('bus_id') as $value) {
                 $detail = new Booking_detail();
                 $detail->booking_id = $booking->id;
                 $detail->armada_id = $value;
                 $detail->harga_std = $request->harga_std;
-                $detail->diskon = $request->diskon;
-                $detail->total_harga = $detail->harga_std - $detail->diskon;
+                $detail->diskon = null;
+                $detail->total_harga = null;
                 $detail->save();
             }
 
