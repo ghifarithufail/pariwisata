@@ -14,18 +14,34 @@ class SpjController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $booking = Booking::whereHas('details', function ($details) {
-            $details->where('is_in', null);
+        $customer = $request->input('customer');
+        $no_booking = $request->input('no_booking');
+        
+        $bookings = Booking::whereHas('details', function ($details) {
+            // $details->where('is_in', null);
         })
         ->where('payment_status', 1)
-        ->orderBy('created_at', 'desc')
-        ->get();
+        ->orderBy('created_at', 'desc');
+
+        if($request['customer']){
+            $bookings->where('customer', 'like', '%' . $request['customer'] . '%');
+        };
+
+        if($request['no_booking']){
+            $bookings->where('no_booking', $request['no_booking']);
+        };
+
+        $booking = $bookings->get();
 
 
         return view('layouts.spj.index', [
-            'booking' => $booking
+            'booking' => $booking,
+            'request' => [
+                'customer' => $customer,
+                'no_booking' => $no_booking,
+            ],
         ]);
     }
 

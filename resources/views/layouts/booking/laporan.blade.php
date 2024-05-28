@@ -21,7 +21,6 @@
         <h5 class="card-header">Report Bookings</h5>
     </div>
     <div class="card mt-4">
-
         <div class="card-header" style="zoom: 0.8">
             <form>
                 <div class="form-group row">
