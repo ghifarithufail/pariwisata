@@ -241,7 +241,36 @@
                         <div data-i18n="Jadwal">Jadwal</div>
                     </a>
                 </li>
+            </ul>
         </li>
-    </ul>
+        <li class="menu-item" style="">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-layout"></i>
+                <div data-i18n="Report">Report</div>
+            </a>
+
+            <ul class="menu-sub">
+                <li class="menu-item">
+                    <a href="{{ route('report/booking') }}" class="menu-link">
+                        <div data-i18n="Booking">Booking</div>
+                    </a>
+                </li>
+            </ul>
+            <ul class="menu-sub">
+                <li class="menu-item">
+                    <a href="{{ route('report/detail') }}" class="menu-link">
+                        <div data-i18n="detail">detail</div>
+                    </a>
+                </li>
+            </ul>
+            <ul class="menu-sub">
+                <li class="menu-item">
+                    <a href="{{ route('report/spj') }}" class="menu-link">
+                        <div data-i18n="SPJ">SPJ</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    
 </aside>
 <!-- / Menu -->

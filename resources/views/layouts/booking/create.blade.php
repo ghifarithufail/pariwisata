@@ -26,8 +26,8 @@
     </style>
     <div class="container-xxl flex-grow-1 container-p-y">
         {{-- <h4 class="py-3 mb-4">
-        <span class="text-muted fw-light">Wizard examples /</span> Property Listing
-    </h4> --}}
+    <span class="text-muted fw-light">Wizard examples /</span> Property Listing
+</h4> --}}
 
         <!-- Property Listing Wizard -->
         <div class="card text-center">
@@ -68,7 +68,8 @@
                 @elseif ($bus->isNotEmpty())
                     <div id="wizard-property-listing" class="bs-stepper vertical mt-2 linear">
                         <div class="bs-stepper-content">
-                            <form action="{{ route('booking/store') }}" method="POST" enctype="multipart/form-data">
+                            <form action="{{ route('booking/store') }}" method="POST" enctype="multipart/form-data"
+                                id="booking_form">
                                 @csrf
                                 <div id="personal-details"
                                     class="content active dstepper-block fv-plugins-bootstrap5 fv-plugins-framework">
@@ -137,11 +138,6 @@
                                             <input type="number" id="diskon" name="diskon" class="form-control">
                                         </div>
                                         <div class="col-sm-6 fv-plugins-icon-container">
-                                            <label class="form-label" for="biaya_jemput">Biaya Jemput</label>
-                                            <input type="number" id="biaya_jemput" name="biaya_jemput"
-                                                class="form-control">
-                                        </div>
-                                        <div class="col-sm-6 fv-plugins-icon-container">
                                             <label class="form-label" for="harga_std">Harga Booking</label>
                                             <input type="text" id="total_harga_std" name="harga_std"
                                                 class="form-control" readonly>
@@ -154,7 +150,7 @@
                                         </div>
                                         <div class="col-sm-6">
                                             <label class="form-label" for="grand_total">Total Biaya</label>
-                                            <input type="number" id="grand_total" name="grand_total"
+                                            <input type="text" id="grand_total" name="grand_total"
                                                 class="form-control" readonly>
                                         </div>
                                         <div class="col-sm-6 fv-plugins-icon-container">
@@ -169,7 +165,6 @@
                                                 id="submit_btn">Submit</button>
                                         </div>
                                     </div>
-                                </div>
                             </form>
                         </div>
                     </div>
@@ -191,6 +186,7 @@
         @if (session('error'))
             toastr.error("{{ session('error') }}");
         @endif
+
         document.addEventListener('DOMContentLoaded', function() {
             // Hide the Submit button when the page loads
             document.getElementById('submit_btn').style.display = 'none';
@@ -205,11 +201,11 @@
                 formatHargaStd();
             });
         });
+
         document.addEventListener('DOMContentLoaded', function() {
             var checkboxes = document.querySelectorAll('input[name="bus_id[]"]');
             var totalBusInput = document.getElementById('total_bus');
             var hargaStdInput = document.getElementById('total_harga_std');
-            var hargaBiayaJemput = document.getElementById('biaya_jemput');
             var diskon = document.getElementById('diskon');
             var grandTotalInput = document.getElementById('grand_total');
 
@@ -236,10 +232,9 @@
                 var checkedCheckboxes = document.querySelectorAll('input[name="bus_id[]"]:checked');
                 totalBusInput.value = checkedCheckboxes.length;
 
-                var hargaStd = parseFloat(hargaStdInput.value);
+                var hargaStd = parseFloat(hargaStdInput.value.replace(/,/g, ''));
                 var totalBus = parseInt(totalBusInput.value);
-                var totalDiskon = parseFloat(diskon.value);
-                var totalBiayaJemput = parseFloat(hargaBiayaJemput.value);
+                var totalDiskon = parseFloat(diskon.value.replace(/,/g, ''));
 
                 // Ensure values are valid numbers
                 if (isNaN(hargaStd)) {
@@ -251,21 +246,16 @@
                 if (isNaN(totalDiskon)) {
                     totalDiskon = 0;
                 }
-                if (isNaN(totalBiayaJemput)) {
-                    totalBiayaJemput = 0;
-                }
 
                 // Ensure the discount is not more than the total price
-                var totalHarga = hargaStd * totalBus;
-                if (totalDiskon > totalHarga) {
-                    totalDiskon = totalHarga;
-                }
-
-                // Calculate grand total
-                var grandTotal = totalHarga - totalDiskon + totalBiayaJemput;
+                var grandTotal = (hargaStd * totalBus) - totalDiskon;
 
                 // Update the grand total input value
-                grandTotalInput.value = grandTotal.toFixed(0); // Use toFixed(2) to format to two decimal places
+                grandTotalInput.value = numberWithCommas(grandTotal.toFixed(0));
+            }
+
+            function numberWithCommas(x) {
+                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             }
         });
 
@@ -308,22 +298,39 @@
                     },
                     success: function(response) {
                         // Perbarui nilai tampilan dengan total harga_std yang diterima dari respons AJAX
-                        $('#total_harga_std').val(response.total_harga_std);
+                        $('#total_harga_std').val(numberWithCommas(response.total_harga_std));
 
                         // Calculate grand total
-                        var hargaStd = parseFloat(response.total_harga_std);
+                        var hargaStd = parseFloat(response.total_harga_std.replace(/,/g, ''));
                         var totalBus = parseInt($('#total_bus').val());
-                        var totalDiskon = parseFloat($('#diskon').val());
+                        var totalDiskon = parseFloat($('#diskon').val().replace(/,/g, ''));
                         if (isNaN(totalDiskon)) {
                             totalDiskon = 0; // Atur nilai diskon menjadi 0 jika tidak valid
                         }
                         // var diskonAmount = hargaStd - totalDiskon; // Calculate diskon amount
-                        $('#grand_total').val((hargaStd * totalBus) - totalDiskon);
+                        $('#grand_total').val(numberWithCommas((hargaStd * totalBus) -
+                            totalDiskon));
                     },
                     error: function(xhr, status, error) {
                         console.error(xhr.responseText);
                     }
                 });
+            });
+
+            // Format input fields on keyup event
+            $('#diskon, #total_harga_std, #grand_total').on('keyup', function() {
+                $(this).val($(this).val().replace(/,/g, ''));
+            });
+
+            function numberWithCommas(x) {
+                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
+
+            // Remove commas from input fields before form submission
+            $('#booking_form').on('submit', function() {
+                $('#diskon').val($('#diskon').val().replace(/,/g, ''));
+                $('#total_harga_std').val($('#total_harga_std').val().replace(/,/g, ''));
+                $('#grand_total').val($('#grand_total').val().replace(/,/g, ''));
             });
         });
     </script>

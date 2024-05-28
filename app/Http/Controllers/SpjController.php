@@ -17,8 +17,11 @@ class SpjController extends Controller
     public function index()
     {
         $booking = Booking::whereHas('details', function ($details) {
-            // $details->where('is_in', null);
-        })->orderBy('created_at', 'desc')->get();
+            $details->where('is_in', null);
+        })
+        ->where('payment_status', 1)
+        ->orderBy('created_at', 'desc')
+        ->get();
 
 
         return view('layouts.spj.index', [
@@ -183,9 +186,10 @@ class SpjController extends Controller
 
 
             $booking = Booking::where('id', $detail->booking_id)->first();
-            $pendapatan = Booking_detail::where('booking_id', $detail->booking_id)->sum('total_pengeluaran');
+            $pengeluaran = Booking_detail::where('booking_id', $detail->booking_id)->sum('total_pengeluaran');
 
-            $booking->total_pendapatan = $booking->grand_total - $pendapatan;
+            $booking->total_pendapatan = $booking->grand_total - $pengeluaran;
+            $booking->total_pengeluaran = $pengeluaran;
             $booking->save();
 
 
@@ -229,5 +233,52 @@ class SpjController extends Controller
 
             return redirect()->back()->with('error', 'Gagal Membuat SPJ Masuk ' . $e->getMessage());
         }
+    }
+
+    public function report(Request $request)
+    {
+
+        $no_spj = $request->input('no_spj');
+        $no_booking = $request->input('no_booking');
+        $tanggal = $request->input('tanggal');
+        $date_start = $request->input('date_start', now()->startOfMonth()->format('Y-m-d'));
+        $date_end = $request->input('date_end', now()->endOfMonth()->format('Y-m-d'));
+
+        $booking = Booking::orderBy('created_at', 'desc')->get();
+        $spjs = Spj::with('booking_details')
+            ->where('type', 2)
+            ->orderBy('created_at', 'desc');
+
+        if ($request['date_start']) {
+            $spjs->whereDate('created_at', '>=', $request['date_start']);
+        }
+
+        if ($request['date_end']) {
+            $spjs->whereDate('created_at', '<=', $request['date_end']);
+        }
+
+        if ($request['no_spj']) {
+            $spjs->where('no_spj', $request['no_spj']);
+        };
+
+        if ($request['no_booking']) {
+            $spjs->whereHas('booking_details.bookings', function ($bookings) use ($request) {
+                $bookings->where('no_booking', $request['no_booking']);
+            });
+        };
+
+        $spj = $spjs->get();
+
+        return view('layouts.spj.report', [
+            'booking' => $booking,
+            'spj' => $spj,
+            'request' => [
+                'no_spj' => $no_spj,
+                'tanggal' => $tanggal,
+                'no_booking' => $no_booking,
+                'date_start' => $date_start,
+                'date_end' => $date_end,
+            ],
+        ]);
     }
 }

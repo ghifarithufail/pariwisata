@@ -67,10 +67,60 @@ class BookingController extends Controller
 
     public function report()
     {
-        $booking = Booking::with('details')->orderBy('created_at', 'DESC')->get();
+        $booking = Booking::with('details')->whereHas('details', function ($details) {
+            $details->whereNotNull('is_in');
+        })
+        ->orderBy('created_at', 'DESC')->get();
 
         return view('layouts.booking.report', [
             'booking' => $booking,
+        ]);
+    }
+
+    public function laporan(Request $request)
+    {
+        $customer = $request->input('customer');
+        $no_booking = $request->input('no_booking');
+        $tanggal = $request->input('tanggal');
+        $date_start = $request->input('date_start', now()->startOfMonth()->format('Y-m-d'));
+        $date_end = $request->input('date_end', now()->endOfMonth()->format('Y-m-d'));
+
+        $bookings = Booking::with('details')->whereHas('details', function ($details) {
+            $details->whereNotNull('is_in');
+        })
+        ->orderBy('created_at', 'DESC');
+
+        if ($request['date_start']) {
+            $bookings->whereDate('date_start', '>=', $request['date_start']);
+        }
+
+        if ($request['date_end']) {
+            $bookings->whereDate('date_end', '<=', $request['date_end']);
+        }
+
+        if($request['customer']){
+            $bookings->where('customer', 'like', '%' . $request['customer'] . '%');
+        };
+
+        if($request['no_booking']){
+            $bookings->where('no_booking', $request['no_booking']);
+        };
+
+        if($request['tanggal']){
+            $bookings->where('date_start', $request['tanggal']);
+        };
+
+        $booking = $bookings->get();
+
+        return view('layouts.booking.laporan', [
+            'booking' => $booking,
+            'request' => [
+                'customer' => $customer,
+                'tanggal' => $tanggal,
+                'no_booking' => $no_booking,
+                'date_start' => $date_start,
+                'date_end' => $date_end,
+            ],
         ]);
     }
 
@@ -113,7 +163,7 @@ class BookingController extends Controller
 
             $booking->save();
 
-            $diskon = $request->diskon / $request->total_bus ;
+            $diskon = $request->diskon / $request->total_bus;
 
             foreach ($request->input('bus_id') as $value) {
                 $detail = new Booking_detail();
@@ -126,7 +176,8 @@ class BookingController extends Controller
             }
 
             DB::commit();
-            return redirect()->back()->with('success', 'Data berhasil disimpan');
+            return redirect('booking/detail/' . $booking->id);
+            // return redirect()->back()->with('success', 'Data berhasil disimpan');
         } catch (\Exception $e) {
             DB::rollBack();
             Log::info($e);
@@ -159,10 +210,62 @@ class BookingController extends Controller
         ]);
     }
 
+    public function detail($id)
+    {
+        $booking = Booking::find($id);
+        $pengemudi = Pengemudi::orderBy('created_at', 'desc')->get();
+
+        return view('layouts.booking.detail', [
+            'booking' => $booking,
+            'pengemudi' => $pengemudi,
+
+        ]);
+    }
+
+    // BookingController.php
+    public function store_detail(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $bookingId = $request->input('id'); // Retrieve bookingId from request data
+            $detail = Booking_detail::where('id', $bookingId)->first(); // Find Booking_detail by bookingId
+
+            $booking = Booking::where('id', $detail->booking_id)->first();
+
+            if (!$detail) {
+                return response()->json(['error' => 'Booking detail not found'], 404);
+            }
+
+            if (!$booking) {
+                return response()->json(['error' => 'Booking not found'], 404);
+            }
+
+            $detail->jemput = $request->input('jemput');
+            $detail->biaya_jemput = $request->input('biaya_jemput');
+            $detail->save();
+
+            $total_biaya_jemput = $detail->where('booking_id', $detail->booking_id)->sum('biaya_jemput');
+
+            $booking->biaya_jemput = $total_biaya_jemput;
+            $booking->grand_total = $detail->biaya_jemput + $booking->grand_total;
+            $booking->save();
+
+            DB::commit();
+
+            return response()->json(['success' => 'Data updated successfully'], 200);
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error($e);
+            return response()->json(['error' => $e->getMessage()], 422);
+        }
+    }
+
+
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request)
+    public function update_pengemudi(Request $request)
     {
         try {
             DB::beginTransaction();
@@ -195,7 +298,7 @@ class BookingController extends Controller
         $jadwal = Booking_detail::whereHas('bookings', function ($bookings) {
             $endOfMonth = Carbon::now()->endOfMonth()->toDateString();
             $startOfMonth = Carbon::now()->startOfMonth()->toDateString();
-            
+
             $bookings->whereDate('date_start', '>=', $startOfMonth)
                 ->whereDate('date_end', '<=', $endOfMonth);
         })

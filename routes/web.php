@@ -144,19 +144,25 @@ Route::prefix('kondektur')->group(function () {
 Route::prefix('booking')->group(function () {
     Route::get('/', [BookingController::class, 'index'])->name('booking');
     Route::get('/report', [BookingController::class, 'report'])->name('booking/report');
+    Route::get('/laporan', [BookingController::class, 'laporan'])->name('booking/laporan');
     Route::get('/create', [BookingController::class, 'create'])->name('booking/create');
     Route::post('/store', [BookingController::class, 'store'])->name('booking/store');
     Route::get('/pengemudi/{id}', [BookingController::class, 'pengemudi'])->name('booking/pengemudi');
-    Route::post('/update-data', [BookingController::class, 'update'])->name('booking/update');
+    Route::post('/update-data', [BookingController::class, 'update_pengemudi'])->name('booking/update');
+    Route::get('/detail/{id}', [BookingController::class, 'detail'])->name('booking/detail');
+    Route::post('/store-detail', [BookingController::class, 'store_detail'])->name('booking/store_detail');
     Route::get('/jadwal', [BookingController::class, 'jadwal'])->name('jadwal');
     Route::post('/getTujuan', [BookingController::class, 'getTujuan'])->name('getTujuan');
     Route::post('/getTotalHargaStd', [BookingController::class, 'getTotalHargaStd'])->name('getTotalHargaStd');
     Route::get('/edit/{id}', [BookingController::class, 'edit'])->name('booking/edit');
     Route::post('/update-reservation', [BookingController::class, 'updateBusReservation'])->name('booking/update');
     Route::post('/update-date', [BookingController::class, 'updateDateReservation'])->name('booking/update/date');
+});
 
-
-
+Route::prefix('report')->group(function () {
+    Route::get('/booking', [BookingController::class, 'laporan'])->name('report/booking');
+    Route::get('/detail', [BookingController::class, 'report'])->name('report/detail');
+    Route::get('/spj', [SpjController::class, 'report'])->name('report/spj');
 });
 
 Route::prefix('payment')->group(function () {
