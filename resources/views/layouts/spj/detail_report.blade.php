@@ -1,35 +1,9 @@
 @extends('main')
 @section('content')
-
-    <head>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-
-        <!-- jQuery -->
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-        <!-- Select2 CSS -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"
-            integrity="sha512-nMNlpuaDPrqlEls3IX/Q56H36qvBASwb3ipuo3MxeWbsQB1881ox0cRv7UPTgBlriqoynt35KjEwgGUeUXIPnw=="
-            crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-        <!-- Select2 JavaScript -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"
-            integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A=="
-            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <meta name="csrf-token" content="{{ csrf_token() }}">
-    </head>
     <div class="card mt-4">
         <div class="card-body">
             <div class="card-header" style="zoom: 0.8">
-                <h4>Booking Detail {{ $booking->no_booking }}
-                    @if ($booking->payment_status == 1)
-                        <span class="badge bg-success"> Lunas </span>
-                    @else
-                        <span class="badge bg-danger"> Belum Lunas </span>
-                    @endif
-                </h4>
+                <h4>Booking Detail {{ $booking->no_booking }}</h4>
                 <hr>
                 <div class="row">
                     <div class="col-xs-12 col-sm-6">
@@ -80,41 +54,62 @@
                             <thead>
                                 <tr>
                                     <th>No Invoice</th>
-                                    <th>tipe payment</th>
-                                    <th>Bukti Bayar</th>
-                                    <th>Tanggal pembayaran</th>
-                                    <th style="text-align: right;">Nominal dibayarkan</th>
+                                    <th>Jam Jemput</th>
+                                    <th>KM Keluar</th>
+                                    <th>KM Masuk</th>
+                                    <th>Uang Jalan</th>
+                                    <th>Uang Makan</th>
+                                    <th>Uang Parkir</th>
+                                    <th>Uang Tol</th>
+                                    <th>BBM</th>
+                                    <th>Biaya Lain</th>
                                 </tr>
                             </thead>
                             <tbody class="table-border-bottom-0">
                                 @php
-                                    $totalPembayaran = 0;
+                                    $totalUangJalan = 0;
+                                    $totalUangMakan = 0;
+                                    $totalUangParkir = 0;
+                                    $totalUangTol = 0;
+                                    $totalUangBbm = 0;
+                                    $totalBiayaLain = 0;
                                 @endphp
-                                @foreach ($booking->payments as $detail)
+                                @foreach ($booking->details as $data)
                                     @php
-                                        $totalPembayaran += $detail->price;
+                                        $totalUangJalan += $data->spjs->uang_jalan;
+                                        $totalUangMakan += $data->spjs->uang_makan;
+                                        $totalUangParkir += $data->spjs->parkir;
+                                        $totalUangTol += $data->spjs->tol;
+                                        $totalUangBbm += $data->spjs->bbm;
+                                        $totalBiayaLain += $data->spjs->biaya_lain;
                                     @endphp
                                     <tr>
-                                        <td>{{ $detail->no_payment }}</td>
-                                        <td>{{ $detail->types->name }}</td>
-                                        <td>
-                                            <a href="{{ asset('uploads/' . $detail->image) }}" target="_blank">
-                                                <img src="{{ asset('uploads/' . $detail->image) }}" width="80"
-                                                    height="80" style="border-radius: 20%;">
-                                            </a>
-                                        </td>
-                                        <td>{{ $detail->created_at }}</td>
-                                        <td style="text-align: right;">{{ number_format($detail->price) }}</td>
+                                        <td>{{ $data->spjs->no_spj }}</td>
+                                        <td>{{ $data->spjs->jam_jemput }}</td>
+                                        <td>{{ $data->spjs->km_keluar }}</td>
+                                        <td>{{ $data->spjs->km_masuk }}</td>
+                                        <td style="text-align: right;">{{ number_format($data->spjs->uang_jalan) }}</td>
+                                        <td style="text-align: right;">{{ number_format($data->spjs->uang_makan) }}</td>
+                                        <td style="text-align: right;">{{ number_format($data->spjs->parkir) }}</td>
+                                        <td style="text-align: right;">{{ number_format($data->spjs->tol) }}</td>
+                                        <td style="text-align: right;">{{ number_format($data->spjs->bbm) }}</td>
+                                        <td style="text-align: right;">{{ number_format($data->spjs->biaya_lain) }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colspan="4" style="text-align: right;"><b>TOTAL PEMBAYARAN :</b></td>
-                                    <td style="text-align: right;"><b>{{ number_format($totalPembayaran) }}</b></td>
+                                    <td colspan="4" style="text-align: right;"><b>TOTAL :</b></td>
+                                    <td style="text-align: right;"><b>{{ number_format($totalUangJalan) }}</b></td>
+                                    <td style="text-align: right;"><b>{{ number_format($totalUangMakan) }}</b></td>
+                                    <td style="text-align: right;"><b>{{ number_format($totalUangParkir) }}</b></td>
+                                    <td style="text-align: right;"><b>{{ number_format($totalUangTol) }}</b></td>
+                                    <td style="text-align: right;"><b>{{ number_format($totalUangBbm) }}</b></td>
+                                    <td style="text-align: right;"><b>{{ number_format($totalBiayaLain) }}</b></td>
                                 </tr>
                             </tfoot>
                         </table>
+                        
 
                         <div class="mt-3">
                             <!-- Modal -->

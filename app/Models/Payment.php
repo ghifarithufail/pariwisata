@@ -15,4 +15,9 @@ class Payment extends Model
         return $this->belongsTo(Booking::class, 'booking_id', 'id');
     }
 
+    public function types()
+    {
+        return $this->belongsTo(TypePayment::class, 'type_payment_id', 'id');
+    }
+
 }

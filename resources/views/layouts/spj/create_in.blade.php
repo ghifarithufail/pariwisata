@@ -85,7 +85,7 @@
                                 </div>
                             </div>
                             <input type="text" value="{{ $spj->id }}" name="spj_id" readonly
-                                class="form-control" />
+                                class="form-control" hidden/>
 
                             <div class="form-group mt-3">
                                 <label class="control-label col-sm-3">Uang Makan :</label>

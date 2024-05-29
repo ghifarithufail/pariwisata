@@ -427,4 +427,11 @@ class BookingController extends Controller
             return response()->json(['error' => $e->getMessage()], 422);
         }
     }
+    public function detail_report($id){
+        $booking = Booking::find($id);
+
+        return view('layouts.booking.detail_report', [
+            'booking' => $booking,
+        ]);
+    }
 }

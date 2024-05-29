@@ -148,11 +148,9 @@ class SpjController extends Controller
 
         try {
             $validatedData = $request->validate([
-                'lokasi_jemput' => 'required',
                 'jam_jemput' => 'required',
                 'km_keluar' => 'required',
                 'uang_jalan' => 'required',
-                'tujuan' => 'required',
 
             ]);
 
@@ -166,8 +164,8 @@ class SpjController extends Controller
             DB::rollBack();
             Log::info($e);
 
-            // return redirect()->route('payment')->with('error', 'Gagal menyimpan Pembayaran ' . $e->getMessage());
-            return redirect('spj/print/out/' . $spj->id)->with('error', 'Gagal membuat SPJ ' . $e->getMessage());
+            return redirect()->route('payment')->with('error', 'Gagal menyimpan Pembayaran ' . $e->getMessage());
+            // return redirect('spj/print/out/' . $spj->id)->with('error', 'Gagal membuat SPJ ' . $e->getMessage());
         }
     }
 
@@ -295,6 +293,13 @@ class SpjController extends Controller
                 'date_start' => $date_start,
                 'date_end' => $date_end,
             ],
+        ]);
+    }
+    public function detail_report($id){
+        $booking = Booking::find($id);
+
+        return view('layouts.spj.detail_report', [
+            'booking' => $booking,
         ]);
     }
 }

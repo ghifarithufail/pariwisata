@@ -103,39 +103,24 @@
                                     class="form-control" />
                             </div>
                         </div>
-
-                        <div class="form-group">
-                            <label class="control-label col-sm-3">End Date</label>
-                            <div class="col-sm-9">
-                                <input type="date"
-                                    value="{{ Carbon\Carbon::parse($booking->end_date)->format('Y-m-d') }}" disabled
-                                    class="form-control" />
-                            </div>
-                        </div>
                     </div>
 
                     <div class="col-xs-12 col-sm-6">
-                        <div class="form-group">
-                            <label class="control-label col-sm-3">Total Penumpang :</label>
-                            <div class="col-sm-9">
-                                <input type="text" value="{{ $booking->total_passanger }}" disabled class="form-control" />
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="control-label col-sm-4">Penjemputan :</label>
-                            <div class="col-sm-9">
-                                <input type="text" value="{{ $booking->lokasi_jemput }}" disabled class="form-control" />
-
-                            </div>
-                        </div>
-
                         <div class="form-group">
                             <label class="control-label col-sm-3">Tujuan :</label>
                             <div class="col-sm-9">
                                 <input type="text"
                                     value="@foreach ($booking->tujuans() as $key => $item){{ $item->nama_tujuan }}@if (!$loop->last), @endif @endforeach"
                                     disabled class="form-control" />
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">End Date</label>
+                            <div class="col-sm-9">
+                                <input type="date"
+                                    value="{{ Carbon\Carbon::parse($booking->end_date)->format('Y-m-d') }}" disabled
+                                    class="form-control" />
                             </div>
                         </div>
                     </div>
@@ -171,7 +156,7 @@
                             <div class="form-group mt-3">
                                 <label class="control-label col-sm-3">Image :</label>
                                 <div class="col-sm-12 mt-2">
-                                    <input type="file" class="form-control input-quantity" name="image" required>
+                                    <input type="file" class="form-control input-quantity" name="image">
                                 </div>
                             </div>
                             <div class="pt-5 d-flex justify-content-end">

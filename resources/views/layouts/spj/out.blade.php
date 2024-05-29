@@ -163,7 +163,7 @@
                     <tr>
                         <td width="170">Tujuan</td>
                         <td width="1%">:</td>
-                        <td>{{$spj->tujuan}}</td>
+                        <td>{{$spj->booking_details->bookings->tujuan->nama_tujuan}}</td>
                     </tr>
                 </table>
             </div>
@@ -183,7 +183,7 @@
                     <tr>
                         <td width="170">Lokasi Jemput</td>
                         <td width="1%">:</td>
-                        <td>{{ $spj->lokasi_jemput }}</td>
+                        <td>{{ $spj->booking_details->jemput }}</td>
                     </tr>
                     <tr>
                         <td width="170">Biaya Jemput</td>
@@ -265,7 +265,7 @@
             <div style="margin-bottom: 20px;">Demikian perintah jalan ini dibuat secara sadar sebagai bukti
                 yang sah dan dapat digunakan sesuai isi dalam surat ini.</div>
 
-            <table width="100%">
+            {{-- <table width="100%">
                 <tr>
                     <td width="30%">
                         <div style="height: 80px; padding-top: 10px;">Yang Menerima (AE)</div>
@@ -281,7 +281,7 @@
                         ( ........................ )
                     </td>
                 </tr>
-            </table>
+            </table> --}}
         </div>
     </div>
 </body>

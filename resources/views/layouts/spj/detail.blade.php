@@ -13,8 +13,8 @@
                 <thead>
                     <tr>
                         <th>Nama Bus</th>
-                        <th>Kondektur</th>
                         <th>Supir</th>
+                        <th>Kondektur</th>
                         <th class="text-center">SPJ</th>
                     </tr>
                 </thead>
@@ -22,7 +22,7 @@
                     @foreach ($detail as $data)
                         <tr>
                             <td>{{ $data->armadas ? $data->armadas->nobody : '' }}</td>
-                            <td>{{ $data->supir_id }}</td>
+                            <td>{{ $data->pengemudis->users->name }}</td>
                             <td>{{ $data->Kondektur_id }}</td>
                             <td class="text-center">
                                 @if ($data->is_out == null)

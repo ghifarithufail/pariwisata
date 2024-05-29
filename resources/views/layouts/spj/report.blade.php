@@ -1,4 +1,3 @@
-
 @extends('main')
 @section('content')
     <div class="card text-center">
@@ -14,19 +13,18 @@
                     </div> --}}
                     <div class="col-sm-3 mt-2">
                         {{-- <label for="date1">Kecamatan:</label> --}}
-                        <input type="date" style="height: 40px" class="form-control"
-                            placeholder="kelurahan atau kecamatan" value="{{ $request['date_start'] }}" name="date_start" id="date_start">
+                        <input type="date" style="height: 40px" class="form-control" placeholder="kelurahan atau kecamatan"
+                            value="{{ $request['date_start'] }}" name="date_start" id="date_start">
                     </div>
                     <div class="col-sm-3 mt-2">
                         {{-- <label for="date1">Kecamatan:</label> --}}
                         <input type="date" style="height: 40px" class="form-control"
-                            placeholder="kelurahan atau kecamatan" value="{{ $request['date_end'] }}" name="date_end" id="date_end">
+                            placeholder="kelurahan atau kecamatan" value="{{ $request['date_end'] }}" name="date_end"
+                            id="date_end">
                     </div>
                     <div class="col-sm-3 mt-2">
-                        <input type="text" class="form-control" placeholder="No SPJ" name="no_spj" id="no_spj">
-                    </div>
-                    <div class="col-sm-3 mt-2">
-                        <input type="text" class="form-control" placeholder="No Booking" name="no_booking" id="no_booking">
+                        <input type="text" class="form-control" placeholder="No Booking" name="no_booking"
+                            id="no_booking">
                     </div>
                     <div class="col-sm-2">
                         <button type="submit" class="btn btn-primary rounded text-white mt-2 mr-2" style="height: 40px"
@@ -41,25 +39,41 @@
             <table class="table table-hover" style="zoom: 0.75">
                 <thead>
                     <tr>
-                        <th>No SPJ</th>
+                        <th>Customer</th>
                         <th>No Booking</th>
-                        <th>Bus</th>
-                        <th>Jam Jemput</th>
-                        <th>Tempat Jemput</th>
-                        <th>Supir</th>
+                        <th>Tujuan</th>
+                        <th>Harga Booking</th>
+                        <th>Total Bus</th>
                         <th>Uang Jalan</th>
+                        <th class="text-center">Detail</th>
                     </tr>
                 </thead>
                 <tbody class="table-border-bottom-0">
-                    @foreach ($spj as $data)
+                    @foreach ($booking as $data)
                         <tr>
-                            <td>{{ $data->no_spj }}</td>
-                            <td>{{ $data->booking_details->bookings->no_booking }}</td>
-                            <td>{{ $data->booking_details->armadas->nobody }}</td>
-                            <td>{{ $data->jam_jemput }}</td>
-                            <td>{{ $data->booking_details->jemput }}</td>
-                            <td>{{ $data->booking_details->pengemudis->users->name }}</td>
-                            <td>{{ number_format($data->uang_jalan) }}</td>
+                            <td>{{ $data->customer }}</td>
+                            <td>{{ $data->no_booking }}</td>
+                            <td>{{ $data->tujuan->nama_tujuan }}</td>
+                            <td>{{ number_format($data->grand_total) }}</td>
+                            <td>{{ $data->total_bus }}</td>
+                            <td>
+                                @php
+                                    $total = 0;
+                                @endphp
+                                @foreach ($data->details as $item)
+                                    @php
+                                        $total += $item->total_sisa_uang_jalan + $item->total_pengeluaran;
+                                    @endphp
+                                @endforeach
+                                {{ number_format($total) }}
+                            </td>
+
+                            <td class="text-center">
+                                <a href="{{ route('report/spj/detail', $data->id) }}">
+                                    <button type="button" class="btn rounded-pill btn-warning"
+                                        fdprocessedid="c80zr4">detail</button>
+                                </a>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>

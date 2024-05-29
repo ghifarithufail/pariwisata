@@ -66,7 +66,7 @@
                         <th>Nama Pemesan</th>
                         <th>Tujuan</th>
                         <th>Pendapatan</th>
-                        {{-- <th class="text-center">Actions</th> --}}
+                        <th class="text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="table-border-bottom-0">
@@ -78,6 +78,12 @@
                             <td>{{ $data->customer }}</td>
                             <td>{{ $data->tujuan->nama_tujuan }}</td>
                             <td>{{ number_format($data->total_pendapatan) }}</td>
+                            <td class="text-center">
+                                <a href="{{ route('report/booking/detail', $data->id) }}">
+                                    <button type="button" class="btn rounded-pill btn-warning"
+                                        fdprocessedid="c80zr4">detail</button>
+                                </a>
+                            </td>
                             {{-- <td>{{ $data->lokasi_jemput }}</td> --}}
                             {{-- <td>
                                 @foreach ($data->tujuans() as $item)
