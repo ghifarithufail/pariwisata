@@ -19,7 +19,7 @@ class BookingController extends Controller
      * Display a listing of the resource.
      */
 
-     // ganti branch ke ghifari
+     // ganti branch ke ghifari yg benar
     public function index()
     {
         $booking = Booking::with('details')->orderBy('created_at', 'desc')->get();
