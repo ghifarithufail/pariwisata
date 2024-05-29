@@ -163,6 +163,8 @@ Route::prefix('report')->group(function () {
     Route::get('/booking', [BookingController::class, 'laporan'])->name('report/booking');
     Route::get('/detail', [BookingController::class, 'report'])->name('report/detail');
     Route::get('/spj', [SpjController::class, 'report'])->name('report/spj');
+    Route::get('/payment', [PaymentController::class, 'report'])->name('report/payment');
+    Route::get('/payment/detail/{id}', [PaymentController::class, 'detail_report'])->name('report/payment/detail');
 });
 
 Route::prefix('payment')->group(function () {

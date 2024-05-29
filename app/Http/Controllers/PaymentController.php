@@ -14,17 +14,29 @@ class PaymentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $customer = $request->input('customer');
+        $no_booking = $request->input('no_booking');
 
-        $booking = Booking::with('payments')->where('payment_status', '2')->orderBy('created_at', 'desc')->get();
+        $bookings = Booking::with('payments')->where('payment_status', '1')->orderBy('created_at', 'desc');
+
+        if($request['customer']){
+            $bookings->where('customer', 'like', '%' . $request['customer'] . '%');
+        };
+
+        if($request['no_booking']){
+            $bookings->where('no_booking', $request['no_booking']);
+        };
+
+        $booking = $bookings->get();
 
         return view('layouts.payment.index', [
             'booking' => $booking,
-            // 'request' => [
-            //     'start' => $start,
-            //     'end' => $end,
-            // ],
+            'request' => [
+                'customer' => $customer,
+                'no_booking' => $no_booking,
+            ],
         ]);
     }
 
@@ -65,13 +77,22 @@ class PaymentController extends Controller
             
             
             $payment = new Payment($validatedData);
+
+            $count = Payment::whereMonth("created_at", date("m"))
+                ->whereYear("created_at", date("Y"))
+                ->count();
+
+            $next = $count + 1;
+            $array_bln = array(1 => "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII");
+
+            $payment->no_payment = "BK/PP/INV/" . date("Y") . "/" . $array_bln[date('n')] . "/" . $next;
+
             $booking = Booking::where('id', $payment->booking_id)->first();
 
             $payment->image = $request->file('image')->store('payments');
             $payment->save();
             
 
-            
             $totalPayment = $payment->where('booking_id', $payment->booking_id)->sum('price');
 
             $booking->total_payment = $totalPayment;
@@ -92,35 +113,42 @@ class PaymentController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Payment $payment)
-    {
-        //
+    public function report(Request $request){
+
+        $no_booking = $request->input('no_booking');
+        $date_start = $request->input('date_start', now()->startOfMonth()->format('Y-m-d'));
+        $date_end = $request->input('date_end', now()->endOfMonth()->format('Y-m-d'));
+
+        $bookings = Booking::orderBy('created_at','desc');
+
+        if ($request['date_start']) {
+            $bookings->whereDate('created_at', '>=', $request['date_start']);
+        }
+
+        if ($request['date_end']) {
+            $bookings->whereDate('created_at', '<=', $request['date_end']);
+        }
+
+        if ($request['no_booking']) {
+                $bookings->where('no_booking', $request['no_booking']);
+        };
+
+        $booking = $bookings->get();
+        return view('layouts.payment.report', [
+            'booking' => $booking,
+            'request' => [
+                'no_booking' => $no_booking,
+                'date_start' => $date_start,
+                'date_end' => $date_end,
+            ],
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Payment $payment)
-    {
-        //
-    }
+    public function detail_report($id){
+        $booking = Booking::find($id);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Payment $payment)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Payment $payment)
-    {
-        //
+        return view('layouts.payment.detail', [
+            'booking' => $booking,
+        ]);
     }
 }

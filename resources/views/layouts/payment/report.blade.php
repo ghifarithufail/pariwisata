@@ -2,7 +2,7 @@
 @extends('main')
 @section('content')
     <div class="card text-center">
-        <h5 class="card-header">Report SPJ</h5>
+        <h5 class="card-header">Report Payment</h5>
     </div>
     <div class="card mt-4">
 
@@ -23,9 +23,6 @@
                             placeholder="kelurahan atau kecamatan" value="{{ $request['date_end'] }}" name="date_end" id="date_end">
                     </div>
                     <div class="col-sm-3 mt-2">
-                        <input type="text" class="form-control" placeholder="No SPJ" name="no_spj" id="no_spj">
-                    </div>
-                    <div class="col-sm-3 mt-2">
                         <input type="text" class="form-control" placeholder="No Booking" name="no_booking" id="no_booking">
                     </div>
                     <div class="col-sm-2">
@@ -41,25 +38,34 @@
             <table class="table table-hover" style="zoom: 0.75">
                 <thead>
                     <tr>
-                        <th>No SPJ</th>
                         <th>No Booking</th>
                         <th>Bus</th>
-                        <th>Jam Jemput</th>
-                        <th>Tempat Jemput</th>
-                        <th>Supir</th>
-                        <th>Uang Jalan</th>
+                        <th>Tujuan</th>
+                        <th>Harga Booking</th>
+                        <th>Status Pemabyaran</th>
+                        <th class="text-center">Detail</th>
                     </tr>
                 </thead>
                 <tbody class="table-border-bottom-0">
-                    @foreach ($spj as $data)
+                    @foreach ($booking as $data)
                         <tr>
-                            <td>{{ $data->no_spj }}</td>
-                            <td>{{ $data->booking_details->bookings->no_booking }}</td>
-                            <td>{{ $data->booking_details->armadas->nobody }}</td>
-                            <td>{{ $data->jam_jemput }}</td>
-                            <td>{{ $data->booking_details->jemput }}</td>
-                            <td>{{ $data->booking_details->pengemudis->users->name }}</td>
-                            <td>{{ number_format($data->uang_jalan) }}</td>
+                            <td>{{ $data->no_booking }}</td>
+                            <td>{{ $data->customer }}</td>
+                            <td>{{ $data->tujuan->nama_tujuan }}</td>
+                            <td>{{ number_format($data->grand_total) }}</td>
+                            <td>
+                                @if ($data->payment_status == 1)
+                                    Lunas
+                                @else
+                                    Belum Lunas
+                                @endif
+                            </td>
+                            <td class="text-center">
+                                <a href="{{ route('report/payment/detail', $data->id) }}">
+                                    <button type="button" class="btn rounded-pill btn-warning"
+                                        fdprocessedid="c80zr4">detail</button>
+                                </a>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>

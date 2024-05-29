@@ -270,7 +270,13 @@
                     </a>
                 </li>
             </ul>
+            <ul class="menu-sub">
+                <li class="menu-item">
+                    <a href="{{ route('report/payment') }}" class="menu-link">
+                        <div data-i18n="Payment">Payment</div>
+                    </a>
+                </li>
+            </ul>
         </li>
-    
 </aside>
 <!-- / Menu -->
