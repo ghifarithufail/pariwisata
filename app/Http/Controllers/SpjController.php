@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\SpjExport;
 use App\Models\Spj;
 use App\Models\Booking;
 use Illuminate\Http\Request;
 use App\Models\Booking_detail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Excel;
 
 class SpjController extends Controller
 {
@@ -258,34 +260,37 @@ class SpjController extends Controller
         $date_start = $request->input('date_start', now()->startOfMonth()->format('Y-m-d'));
         $date_end = $request->input('date_end', now()->endOfMonth()->format('Y-m-d'));
 
-        $booking = Booking::orderBy('created_at', 'desc')->get();
-        $spjs = Spj::with('booking_details')
-            ->where('type', 2)
-            ->orderBy('created_at', 'desc');
+        $bookings = Booking::orderBy('created_at', 'desc')
+            ->whereHas('details.spjs', function ($spjs){
+                $spjs->where('type', 2);
+            });
+
+        // $spjs = Spj::with('booking_details')
+        //     ->where('type', 2)
+        //     ->orderBy('created_at', 'desc');
 
         if ($request['date_start']) {
-            $spjs->whereDate('created_at', '>=', $request['date_start']);
+            $bookings->whereDate('date_start', '>=', $request['date_start']);
         }
 
         if ($request['date_end']) {
-            $spjs->whereDate('created_at', '<=', $request['date_end']);
+            $bookings->whereDate('date_end', '<=', $request['date_end']);
         }
 
         if ($request['no_spj']) {
-            $spjs->where('no_spj', $request['no_spj']);
-        };
-
-        if ($request['no_booking']) {
-            $spjs->whereHas('booking_details.bookings', function ($bookings) use ($request) {
-                $bookings->where('no_booking', $request['no_booking']);
+            $bookings->whereHas('details.spjs', function ($spjs) use($request){
+                $spjs->where('no_spj', $request['no_spj']);
             });
         };
 
-        $spj = $spjs->get();
+        if ($request['no_booking']) {
+            $bookings->where('no_booking', $request['no_booking']);
+        };
+
+        $booking = $bookings->get();
 
         return view('layouts.spj.report', [
             'booking' => $booking,
-            'spj' => $spj,
             'request' => [
                 'no_spj' => $no_spj,
                 'tanggal' => $tanggal,
@@ -295,6 +300,11 @@ class SpjController extends Controller
             ],
         ]);
     }
+
+    public function excel(Request $request){
+        return Excel::download(new SpjExport($request), 'Spj.xlsx');
+    }
+    
     public function detail_report($id){
         $booking = Booking::find($id);
 
@@ -302,4 +312,5 @@ class SpjController extends Controller
             'booking' => $booking,
         ]);
     }
+
 }

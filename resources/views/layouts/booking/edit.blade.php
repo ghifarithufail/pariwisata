@@ -88,7 +88,7 @@
                                     <tr>
                                         <td>{{ $detail->armadas->nobody }}</td>
                                         <td>{{ $detail->pengemudis ? $detail->pengemudis->nopengemudi : '' }} - {{ $detail->pengemudis ? $detail->pengemudis->users->name : '' }}</td>
-                                        <td>{{ $detail->Kondektur_id }}</td>
+                                        <td>{{ $detail->kondekturs ? $detail->kondekturs->nokondektur : ''  }} - {{ $detail->kondekturs ? $detail->kondekturs->users->name : '' }}</td>
                                         <td class="text-center">
                                             <button type="button" class="btn btn-primary launch-modal"
                                                 data-bs-toggle="modal" data-bs-target="#basicModal"
@@ -108,55 +108,51 @@
                         </table>
                         <div class="mt-3">
                             <!-- Modal -->
-                            <div class="modal fade" id="basicModal" tabindex="-1" style="display: none;"
-                                aria-hidden="true">
+                            <div class="modal fade" id="basicModal" tabindex="-1" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <form id="form">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel1">Edit Supir Dan Kondektur
-                                                </h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                    aria-label="Close"></button>
+                                                <h5 class="modal-title">Edit Supir Dan Kondektur</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
                                                 <div class="row">
                                                     <div class="col mb-3">
                                                         <label for="bus" class="form-label">Bus</label>
-                                                        <input type="text" id="bus" class="form-control" disabled
-                                                            placeholder="Enter Name">
+                                                        <input type="text" id="bus" class="form-control" disabled>
                                                     </div>
                                                 </div>
                                                 <div class="row g-2">
                                                     <div class="col mb-0">
                                                         <label for="supir_id" class="form-label">Pengemudi</label>
-                                                        {{-- <input type="number" name="supir_id" id="supir_id"
-                                                            class="form-control"> --}}
-                                                        <select class="form-select" id="supir_id" name="supir_id"
-                                                            aria-label="Default select example" fdprocessedid="6aeghl">
+                                                        <select class="form-select" id="supir_id" name="supir_id">
                                                             <option value="" selected disabled>Silahkan pilih pengemudi</option>
                                                             @foreach ($pengemudi as $item)
-                                                                <option value="{{ $item->id }}"> {{ $item->nopengemudi }} - {{ $item->users->name}}</option>
+                                                                <option value="{{ $item->id }}">{{ $item->nopengemudi }} - {{ $item->users->name }}</option>
                                                             @endforeach
                                                         </select>
                                                     </div>
                                                     <div class="col mb-0">
                                                         <label for="kondektur_id" class="form-label">Kondektur</label>
-                                                        <input type="number" name="Kondektur_id" id="kondektur_id"
-                                                            class="form-control">
+                                                        <select class="form-select" id="kondektur_id" name="kondektur_id">
+                                                            <option value="" selected disabled>Silahkan pilih Kondektur</option>
+                                                            @foreach ($kondektur as $item)
+                                                                <option value="{{ $item->id }}">{{ $item->nokondektur }} - {{ $item->users->name }}</option>
+                                                            @endforeach
+                                                        </select>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-outline-secondary"
-                                                    data-bs-dismiss="modal">Close</button>
-                                                <button type="button" class="btn btn-primary" id="saveChangesBtn">Save
-                                                    changes</button>
+                                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-primary" id="saveChangesBtn">Save changes</button>
                                             </div>
                                         </div>
                                     </form>
                                 </div>
                             </div>
+                            
                         </div>
 
                         <script>
@@ -183,19 +179,19 @@
                     var supirId = $(this).data('supir');
                     var bus = $(this).data('bus');
                     var kondekturId = $(this).data('kondektur');
-                    var bookingId = $(this).data('booking-id'); // Mengambil ID booking
-
+                    var bookingId = $(this).data('booking-id');
+        
                     $('#bus').val(bus);
                     $('#supir_id').val(supirId);
                     $('#kondektur_id').val(kondekturId);
-                    $('#bookingId').val(bookingId); // Mengatur nilai ID booking di input tersembunyi
+                    $('#bookingId').val(bookingId);
                 });
-
+        
                 $('#saveChangesBtn').click(function() {
                     var bookingId = $('#bookingId').val();
                     var supirId = $('#supir_id').val();
                     var kondekturId = $('#kondektur_id').val();
-
+        
                     $.ajax({
                         url: '/booking/update-data',
                         method: "POST",
@@ -203,10 +199,9 @@
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         data: {
-                            id: bookingId,
+                            booking_id: bookingId,
                             supir_id: supirId,
-                            kondektur_id: kondekturId,
-                            booking_id: bookingId
+                            kondektur_id: kondekturId
                         },
                         success: function(response) {
                             alert("Data saved, page will be refreshed");
@@ -217,7 +212,8 @@
                             alert(response.error);
                         }
                     });
-                })
+                });
             });
         </script>
+        
     @endsection

@@ -13,7 +13,9 @@ class Kondektur extends Model
 {
     use HasFactory;
 
-    // protected $guarded = ['id'];
+    protected $table = 'kondekturs';
+
+    protected $guarded = ['id'];
 
     protected $fillable = ['nokondektur', 'user_id', 'rute_id', 'pool_id', 'tgl_masuk', 'tanggal_kp', 'nojamsostek', 'ket_kondektur'];
 

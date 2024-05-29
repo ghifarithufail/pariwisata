@@ -56,6 +56,22 @@
         </div>
     </div>
     <div class="card mt-4">
+        <div class="d-flex justify-content-end mt-3" style="zoom: 0.75; margin-right: 60px">
+            <div class="d-flex">
+                <a href="{{ route('booking/excel', [
+                    'date_start' => $request['date_start'],
+                    'date_end' => $request['date_end'],
+                    'customer' => $request['customer'],
+                    'no_booking' => $request['no_booking'],
+                ]) }}"
+                    class="me-2">
+                    <button type="button" class="btn btn-primary">excel</button>
+                </a>
+                {{-- <a href="{{ route('booking/excel') }}">
+                    <button type="button" class="btn btn-warning">detail excel</button>
+                </a> --}}
+            </div>
+        </div>
         <div class="table-responsive text-nowrap">
             <table class="table table-hover" style="zoom: 0.75">
                 <thead>

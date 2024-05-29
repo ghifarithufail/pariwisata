@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Hrd\Kondektur;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -31,5 +32,9 @@ class Booking_detail extends Model
 
     public function pengemudis(){
         return $this->belongsTo(Pengemudi::class, 'supir_id', 'id');
+    }
+
+    public function kondekturs(){
+        return $this->belongsTo(Kondektur::class, 'Kondektur_id', 'id');
     }
 }

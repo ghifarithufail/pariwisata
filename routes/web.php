@@ -157,6 +157,8 @@ Route::prefix('booking')->group(function () {
     Route::get('/edit/{id}', [BookingController::class, 'edit'])->name('booking/edit');
     Route::post('/update-reservation', [BookingController::class, 'updateBusReservation'])->name('booking/update');
     Route::post('/update-date', [BookingController::class, 'updateDateReservation'])->name('booking/update/date');
+    Route::get('/excel', [BookingController::class, 'excel'])->name('booking/excel');
+
 });
 
 Route::prefix('report')->group(function () {
@@ -174,6 +176,8 @@ Route::prefix('payment')->group(function () {
     Route::get('/', [PaymentController::class, 'index'])->name('payment');
     Route::get('/create/{id}', [PaymentController::class, 'create'])->name('payment/create');
     Route::post('/store', [PaymentController::class, 'store'])->name('payment/store');
+    Route::get('/excel', [PaymentController::class, 'excel'])->name('payment/excel');
+
 });
 
 Route::prefix('spj')->group(function () {
@@ -189,4 +193,6 @@ Route::prefix('spj')->group(function () {
     Route::post('/print/out/store', [SpjController::class, 'store_print_out'])->name('spj/print_out/store');
     Route::post('/print/in/store', [SpjController::class, 'store_print_in'])->name('spj/print_in/store');
     Route::post('/biaya_lain/store', [SpjController::class, 'biaya_lain'])->name('spj/biaya_lain');
+    Route::get('/excel', [SpjController::class, 'excel'])->name('spj/excel');
+
 });

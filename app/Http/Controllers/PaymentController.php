@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\PaymentExport;
 use Illuminate\Support\Facades\Log;
 use App\Models\Booking;
 use App\Models\Payment;
 use App\Models\TypePayment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Excel;
 
 class PaymentController extends Controller
 {
@@ -151,6 +153,9 @@ class PaymentController extends Controller
                 'date_end' => $date_end,
             ],
         ]);
+    }
+    public function excel(Request $request){
+        return Excel::download(new PaymentExport($request),'payment.xlsx');
     }
 
     public function detail_report($id)

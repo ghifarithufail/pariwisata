@@ -26,6 +26,10 @@
                         <input type="text" class="form-control" placeholder="No Booking" name="no_booking"
                             id="no_booking">
                     </div>
+                    {{-- <div class="col-sm-3 mt-2">
+                        <input type="text" class="form-control" placeholder="No Spj" name="no_spj"
+                            id="no_booking">
+                    </div> --}}
                     <div class="col-sm-2">
                         <button type="submit" class="btn btn-primary rounded text-white mt-2 mr-2" style="height: 40px"
                             id="search_btn">Search</button>
@@ -35,6 +39,19 @@
         </div>
     </div>
     <div class="card mt-4">
+        <div class="d-flex justify-content-end mt-3" style="zoom: 0.75; margin-right: 60px">
+            <div class="d-flex">
+                <a href="{{ route('spj/excel', [
+                    'date_start' => $request['date_start'],
+                    'date_end' => $request['date_end'],
+                    'no_spj' => $request['no_spj'],
+                    'no_booking' => $request['no_booking'],
+                ]) }}"
+                    class="me-2">
+                    <button type="button" class="btn btn-primary">excel</button>
+                </a>
+            </div>
+        </div>
         <div class="table-responsive text-nowrap">
             <table class="table table-hover" style="zoom: 0.75">
                 <thead>

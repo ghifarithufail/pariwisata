@@ -65,8 +65,8 @@
                                     <th>Pengemudi</th>
                                     <th>Kondektur</th>
                                     <th>Jemput</th>
-                                    <th>Biaya Jemput</th>
-                                    <th>Harga Standar</th>
+                                    <th style="text-align: right;">Biaya Jemput</th>
+                                    <th style="text-align: right;">Harga Standar</th>
                                 </tr>
                             </thead>
                             <tbody class="table-border-bottom-0">

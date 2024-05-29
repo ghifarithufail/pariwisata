@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\BookingExport;
 use App\Models\Armada;
 use App\Models\Booking;
 use App\Models\Booking_detail;
 use App\Models\Bus;
+use App\Models\Hrd\Kondektur;
 use App\Models\Pengemudi;
 use App\Models\Tujuan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Excel;
 
 class BookingController extends Controller
 {
@@ -19,7 +22,7 @@ class BookingController extends Controller
      * Display a listing of the resource.
      */
 
-     // ganti branch ke ghifari yg benar
+    // ganti branch ke ghifari yg benar
     public function index()
     {
         $booking = Booking::with('details')->orderBy('created_at', 'desc')->get();
@@ -72,7 +75,7 @@ class BookingController extends Controller
         $booking = Booking::with('details')->whereHas('details', function ($details) {
             $details->whereNotNull('is_in');
         })
-        ->orderBy('created_at', 'DESC')->get();
+            ->orderBy('created_at', 'DESC')->get();
 
         return view('layouts.booking.report', [
             'booking' => $booking,
@@ -90,7 +93,7 @@ class BookingController extends Controller
         $bookings = Booking::with('details')->whereHas('details', function ($details) {
             $details->whereNotNull('is_in');
         })
-        ->orderBy('created_at', 'DESC');
+            ->orderBy('created_at', 'DESC');
 
         if ($request['date_start']) {
             $bookings->whereDate('date_start', '>=', $request['date_start']);
@@ -100,15 +103,15 @@ class BookingController extends Controller
             $bookings->whereDate('date_end', '<=', $request['date_end']);
         }
 
-        if($request['customer']){
+        if ($request['customer']) {
             $bookings->where('customer', 'like', '%' . $request['customer'] . '%');
         };
 
-        if($request['no_booking']){
+        if ($request['no_booking']) {
             $bookings->where('no_booking', $request['no_booking']);
         };
 
-        if($request['tanggal']){
+        if ($request['tanggal']) {
             $bookings->where('date_start', $request['tanggal']);
         };
 
@@ -204,10 +207,12 @@ class BookingController extends Controller
     {
         $booking = Booking::find($id);
         $pengemudi = Pengemudi::orderBy('created_at', 'desc')->get();
+        $kondektur = Kondektur::orderBy('created_at', 'desc')->get();
 
         return view('layouts.booking.edit', [
             'booking' => $booking,
             'pengemudi' => $pengemudi,
+            'kondektur' => $kondektur,
 
         ]);
     }
@@ -272,14 +277,14 @@ class BookingController extends Controller
         try {
             DB::beginTransaction();
 
-            $bookingId = $request->input('booking_id'); // Retrieve bookingId from request data
-            $detail = Booking_detail::where('id', $bookingId)->first(); // Find Booking_detail by bookingId
+            $bookingId = $request->input('booking_id');
+            $detail = Booking_detail::where('id', $bookingId)->first();
 
             if (!$detail) {
                 return response()->json(['error' => 'Booking detail not found'], 404);
             }
 
-            $detail->supir_id =  $request->input('supir_id');
+            $detail->supir_id = $request->input('supir_id');
             $detail->Kondektur_id = $request->input('kondektur_id');
             $detail->save();
 
@@ -292,6 +297,7 @@ class BookingController extends Controller
             return response()->json(['error' => $e->getMessage()], 422);
         }
     }
+
 
 
     public function jadwal()
@@ -427,11 +433,16 @@ class BookingController extends Controller
             return response()->json(['error' => $e->getMessage()], 422);
         }
     }
-    public function detail_report($id){
+    public function detail_report($id)
+    {
         $booking = Booking::find($id);
 
         return view('layouts.booking.detail_report', [
             'booking' => $booking,
         ]);
+    }
+
+    public function excel(Request $request){
+        return Excel::download(new BookingExport($request), 'Booking.xlsx');
     }
 }

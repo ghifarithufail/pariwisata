@@ -53,7 +53,7 @@
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th>No Invoice</th>
+                                    <th>No SPJ</th>
                                     <th>Jam Jemput</th>
                                     <th>KM Keluar</th>
                                     <th>KM Masuk</th>
