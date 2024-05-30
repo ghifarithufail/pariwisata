@@ -93,6 +93,14 @@ class PaymentController extends Controller
             // Cari booking terkait
             $booking = Booking::where('id', $payment->booking_id)->first();
 
+            // Hitung total pembayaran saat ini untuk booking terkait
+            $totalPayment = Payment::where('booking_id', $payment->booking_id)->sum('price');
+
+            // Periksa jika total pembayaran saat ini + pembayaran baru melebihi grand_total dari booking
+            if (($totalPayment + $payment->price) > $booking->grand_total) {
+                return redirect()->route('payment')->with('error', 'Total pembayaran melebihi grand total booking.');
+            }
+
             // Jika ada file image dalam request, simpan file tersebut
             if ($request->hasFile('image')) {
                 $payment->image = $request->file('image')->store('payments');
@@ -101,8 +109,8 @@ class PaymentController extends Controller
             // Simpan payment
             $payment->save();
 
-            // Hitung total pembayaran untuk booking terkait
             $totalPayment = Payment::where('booking_id', $payment->booking_id)->sum('price');
+            // Hitung total pembayaran untuk booking terkait
 
             // Update total payment dalam booking
             $booking->total_payment = $totalPayment;
@@ -154,8 +162,9 @@ class PaymentController extends Controller
             ],
         ]);
     }
-    public function excel(Request $request){
-        return Excel::download(new PaymentExport($request),'payment.xlsx');
+    public function excel(Request $request)
+    {
+        return Excel::download(new PaymentExport($request), 'payment.xlsx');
     }
 
     public function detail_report($id)
