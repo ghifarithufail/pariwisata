@@ -82,6 +82,7 @@
                                         $totalUangTol += $data->spjs->tol;
                                         $totalUangBbm += $data->spjs->bbm;
                                         $totalBiayaLain += $data->spjs->biaya_lain;
+                                        $totalBiaya = $totalUangJalan - $totalUangMakan - $totalUangParkir - $totalUangTol - $totalUangBbm - $totalBiayaLain;
                                     @endphp
                                     <tr>
                                         <td>{{ $data->spjs->no_spj }}</td>
@@ -106,6 +107,10 @@
                                     <td style="text-align: right;"><b>{{ number_format($totalUangTol) }}</b></td>
                                     <td style="text-align: right;"><b>{{ number_format($totalUangBbm) }}</b></td>
                                     <td style="text-align: right;"><b>{{ number_format($totalBiayaLain) }}</b></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" style="text-align: right; font-size: 20px;"><b>Biaya yang harus dikembalikan :</b></td>
+                                    <td style="text-align: right; font-size: 20px;"><b>{{number_format($totalBiaya)}}</b></td>
                                 </tr>
                             </tfoot>
                         </table>

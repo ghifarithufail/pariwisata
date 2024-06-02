@@ -78,7 +78,7 @@
                     </h4>
                     <hr>
                     @if ($spj->km_keluar == null)
-                        <form action="{{ route('spj/print_out/store') }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('spj/print_out/store') }}" method="POST" enctype="multipart/form-data" id="spj_out">
                             @csrf
                             <input type="text" value="{{ $spj->id }}" name="spj_id" readonly
                                 class="form-control" hidden/>
@@ -99,7 +99,7 @@
                             <div class="form-group mt-3">
                                 <label class="control-label col-sm-3">Uang Jalan :</label>
                                 <div class="col-sm-12 mt-2">
-                                    <input type="number" class="form-control input-quantity" name="uang_jalan" required>
+                                    <input type="text" class="form-control input-quantity" name="uang_jalan" id="uang_jalan" required>
                                 </div>
                             </div>
                             <div class="pt-5 d-flex justify-content-end">
@@ -160,5 +160,24 @@
         @if (session('error'))
             toastr.error("{{ session('error') }}");
         @endif
+
+        $(document).ready(function() {
+            function formatNumber(value) {
+                return value.replace(/\D/g, "") // Remove non-digit characters
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ","); // Add commas
+            }
+
+            $('#uang_jalan').on('input', function() {
+                var input = $(this);
+                var value = input.val();
+                input.val(formatNumber(value));
+            });
+
+            $('#spj_out').on('submit', function() {
+                var priceInput = $('#uang_jalan');
+                var priceValue = priceInput.val().replace(/,/g, ''); // Remove commas
+                priceInput.val(priceValue); // Set the input value without commas
+            });
+        });
     </script>
 @endsection

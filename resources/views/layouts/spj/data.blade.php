@@ -62,15 +62,15 @@
                             BIAYA LAINYA
                         </h4>
                         <hr>
-                        <form action="{{ route('spj/biaya_lain') }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('spj/biaya_lain') }}" method="POST" enctype="multipart/form-data" id="spj_biaya_lain">
                             @csrf
                             <div class="form-group mt-3">
                                 <label class="control-label col-sm-3">Biaya Lain :</label>
                                 <div class="col-sm-12 mt-2">
-                                    <input type="number" value="{{$spj->biaya_lain}}" class="form-control input-quantity" name="biaya_lain" required>
+                                    <input type="text" value="{{$spj->biaya_lain}}" class="form-control input-quantity" name="biaya_lain" id="biaya_lain" required>
                                 </div>
                             </div>
-                            <input type="text" value="{{ $spj->id }}" name="spj_id" readonly class="form-control" />
+                            <input type="text" value="{{ $spj->id }}" name="spj_id" readonly class="form-control" hidden/>
                             <div class="form-group mt-3">
                                 <label class="control-label col-sm-3">keterangan :</label>
                                 <div class="col-sm-12 mt-2">
@@ -86,4 +86,24 @@
             </div>
         </div>
     </div>
+    <script>
+        $(document).ready(function() {
+            function formatNumber(value) {
+                return value.replace(/\D/g, "") // Remove non-digit characters
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ","); // Add commas
+            }
+
+            $('#biaya_lain').on('input', function() {
+                var input = $(this);
+                var value = input.val();
+                input.val(formatNumber(value));
+            });
+
+            $('#spj_biaya_lain').on('submit', function() {
+                var priceInput = $('#biaya_lain');
+                var priceValue = priceInput.val().replace(/,/g, ''); // Remove commas
+                priceInput.val(priceValue); // Set the input value without commas
+            });
+        });
+    </script>
 @endsection

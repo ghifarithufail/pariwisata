@@ -70,7 +70,8 @@
                     </h4>
                     <hr>
                     @if ($spj->km_masuk == null)
-                        <form action="{{ route('spj/print_in/store') }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('spj/print_in/store') }}" method="POST" enctype="multipart/form-data"
+                            id="spj_in">
                             @csrf
                             <div class="form-group mt-3">
                                 <label class="control-label col-sm-3">KM Masuk :</label>
@@ -81,28 +82,32 @@
                             <div class="form-group mt-3">
                                 <label class="control-label col-sm-3">BBM :</label>
                                 <div class="col-sm-12 mt-2">
-                                    <input type="number" class="form-control input-quantity" name="bbm" required>
+                                    <input type="text" class="form-control input-quantity" name="bbm" id="bbm"
+                                        required>
                                 </div>
                             </div>
-                            <input type="text" value="{{ $spj->id }}" name="spj_id" readonly
-                                class="form-control" hidden/>
+                            <input type="text" value="{{ $spj->id }}" name="spj_id" readonly class="form-control"
+                                hidden />
 
                             <div class="form-group mt-3">
                                 <label class="control-label col-sm-3">Uang Makan :</label>
                                 <div class="col-sm-12 mt-2">
-                                    <input type="number" class="form-control input-quantity" name="uang_makan" required>
+                                    <input type="text" class="form-control input-quantity" name="uang_makan"
+                                        id="uang_makan" required>
                                 </div>
                             </div>
                             <div class="form-group mt-3">
-                                <label class="control-label col-sm-3">parkir :</label>
+                                <label class="control-label col-sm-3">Parkir :</label>
                                 <div class="col-sm-12 mt-2">
-                                    <input type="number" class="form-control input-quantity" name="parkir" required>
+                                    <input type="text" class="form-control input-quantity" name="parkir" id="parkir"
+                                        required>
                                 </div>
                             </div>
                             <div class="form-group mt-3">
-                                <label class="control-label col-sm-3">tol :</label>
+                                <label class="control-label col-sm-3">Tol :</label>
                                 <div class="col-sm-12 mt-2">
-                                    <input type="number" class="form-control input-quantity" name="tol" required>
+                                    <input type="text" class="form-control input-quantity" name="tol" id="tol"
+                                        required>
                                 </div>
                             </div>
                             <div class="pt-5 d-flex justify-content-end">
@@ -128,7 +133,8 @@
                             <div class="form-group">
                                 <label class="control-label col-sm-3">BBM :</label>
                                 <div class="col-sm-9">
-                                    <input type="text" value="Rp. {{ number_format($spj->bbm) }}" disabled class="form-control" />
+                                    <input type="text" value="Rp. {{ number_format($spj->bbm) }}" disabled
+                                        class="form-control" />
                                 </div>
                             </div>
 
@@ -153,19 +159,22 @@
                             <div class="form-group">
                                 <label class="control-label col-sm-3">Tol :</label>
                                 <div class="col-sm-9">
-                                    <input type="text" value="Rp. {{ number_format($spj->tol) }}" disabled class="form-control" />
+                                    <input type="text" value="Rp. {{ number_format($spj->tol) }}" disabled
+                                        class="form-control" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-sm-3">Biaya Lain :</label>
                                 <div class="col-sm-9">
-                                    <input type="text" value="Rp .{{ number_format($spj->biaya_lain) }}" disabled class="form-control" />
+                                    <input type="text" value="Rp .{{ number_format($spj->biaya_lain) }}" disabled
+                                        class="form-control" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-sm-3">Keterangan :</label>
                                 <div class="col-sm-9">
-                                    <input type="text" value="{{ $spj->keterangan_spj }}" disabled class="form-control" />
+                                    <input type="text" value="{{ $spj->keterangan_spj }}" disabled
+                                        class="form-control" />
                                 </div>
                             </div>
                         </div>
@@ -190,5 +199,38 @@
         @if (session('error'))
             toastr.error("{{ session('error') }}");
         @endif
+
+        $(document).ready(function() {
+            function formatNumber(value) {
+                return value.replace(/\D/g, "") // Remove non-digit characters
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ","); // Add commas
+            }
+
+            function removeCommas(value) {
+                return value.replace(/,/g, ''); // Remove commas
+            }
+
+            function setupInputFormatting(inputId) {
+                $('#' + inputId).on('input', function() {
+                    var input = $(this);
+                    var value = input.val();
+                    input.val(formatNumber(value));
+                });
+            }
+
+            setupInputFormatting('bbm');
+            setupInputFormatting('uang_makan');
+            setupInputFormatting('parkir');
+            setupInputFormatting('tol');
+
+            $('#spj_in').on('submit', function() {
+                var fields = ['bbm', 'uang_makan', 'parkir', 'tol'];
+                fields.forEach(function(fieldId) {
+                    var input = $('#' + fieldId);
+                    var value = input.val();
+                    input.val(removeCommas(value));
+                });
+            });
+        });
     </script>
 @endsection

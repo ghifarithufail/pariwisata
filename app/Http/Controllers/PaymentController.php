@@ -98,7 +98,7 @@ class PaymentController extends Controller
 
             // Periksa jika total pembayaran saat ini + pembayaran baru melebihi grand_total dari booking
             if (($totalPayment + $payment->price) > $booking->grand_total) {
-                return redirect()->route('payment')->with('error', 'Total pembayaran melebihi grand total booking.');
+                return redirect('payment/create/' . $booking->id)->with('error', 'Total pembayaran melebihi Harga booking.');
             }
 
             // Jika ada file image dalam request, simpan file tersebut

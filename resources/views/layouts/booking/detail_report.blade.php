@@ -67,17 +67,20 @@
                                     <th>Jemput</th>
                                     <th style="text-align: right;">Biaya Jemput</th>
                                     <th style="text-align: right;">Harga Standar</th>
+                                    <th style="text-align: right;">Pengeluaran</th>
                                 </tr>
                             </thead>
                             <tbody class="table-border-bottom-0">
                                 @php
                                     $TotalBiayaJemput = 0;
                                     $TotalHarga = 0;
+                                    $TotalPengeluaran = 0;
                                 @endphp
                                 @foreach ($booking->details as $data)
                                 @php
                                     $TotalBiayaJemput += $data->biaya_jemput;
                                     $TotalHarga += $data->harga_std;
+                                    $TotalPengeluaran += $data->total_pengeluaran;
                                 @endphp
                                     <tr>
                                         <td>{{ $data->armadas->nobody }}</td>
@@ -86,6 +89,7 @@
                                         <td>{{ $data->jemput }}</td>
                                         <td style="text-align: right;">{{ number_format($data->biaya_jemput) }}</td>
                                         <td style="text-align: right;">{{ number_format($data->harga_std) }}</td>
+                                        <td style="text-align: right;">{{ number_format($data->total_pengeluaran) }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -94,6 +98,7 @@
                                     <td colspan="4" style="text-align: right;"><b>TOTAL :</b></td>
                                     <td style="text-align: right;"><b>{{ number_format($TotalBiayaJemput) }}</b></td>
                                     <td style="text-align: right;"><b>{{ number_format($TotalHarga) }}</b></td>
+                                    <td style="text-align: right;"><b>{{ number_format($TotalPengeluaran) }}</b></td>
                                 </tr>
                             </tfoot>
                         </table>

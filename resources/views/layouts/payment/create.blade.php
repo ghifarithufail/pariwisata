@@ -1,5 +1,10 @@
 @extends('main')
 @section('content')
+
+    <head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    </head>
+
     <div class="card text-center">
         <h5 class="card-header">Payments Bookings</h5>
     </div>
@@ -17,7 +22,7 @@
                     </div>
                     <p class="mb-1"><b>Yang Harus Dibayar</b></p>
                     <p class="mb-0">
-                        <span class="fw-medium me-1">{{number_format($booking->grand_total) ?? 0}}</span>
+                        <span class="fw-medium me-1">{{ number_format($booking->grand_total) ?? 0 }}</span>
                     </p>
                 </div>
             </div>
@@ -34,8 +39,7 @@
                         </div>
                         <p class="mb-1"><b>Yang sudah Dibayar</b></p>
                         <p class="mb-0">
-                            <span
-                                class="fw-medium me-1">{{ number_format($booking->total_payment) }}</span>
+                            <span class="fw-medium me-1">{{ number_format($booking->total_payment) }}</span>
                         </p>
                     </div>
                 </div>
@@ -52,8 +56,7 @@
                         </div>
                         <p class="mb-1"><b>Yang sudah Dibayar</b></p>
                         <p class="mb-0">
-                            <span
-                                class="fw-medium me-1">{{ number_format($booking->total_payment) }}</span>
+                            <span class="fw-medium me-1">{{ number_format($booking->total_payment) }}</span>
                         </p>
                     </div>
                 </div>
@@ -64,13 +67,15 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center mb-2 pb-1">
                         <div class="avatar me-2">
-                            <span class="avatar-initial rounded bg-label-primary"><i class='bx bxs-dollar-circle'></i></span>
+                            <span class="avatar-initial rounded bg-label-primary"><i
+                                    class='bx bxs-dollar-circle'></i></span>
                         </div>
                         <h4 class="ms-1 mb-0"></h4>
                     </div>
                     <p class="mb-1"><b>Selisih Pembayaran</b></p>
                     <p class="mb-0">
-                        <span class="fw-medium me-1">{{number_format($booking->grand_total - $booking->total_payment ?? 0)}}</span>
+                        <span
+                            class="fw-medium me-1">{{ number_format($booking->grand_total - $booking->total_payment ?? 0) }}</span>
                     </p>
                 </div>
             </div>
@@ -82,7 +87,7 @@
         <div class="card-body">
             <div class="card-header" style="zoom: 0.8">
                 <h4>
-                    Booking Detail {{$booking->no_booking}}
+                    Booking Detail {{ $booking->no_booking }}
                 </h4>
                 <hr>
                 <div class="row">
@@ -114,7 +119,7 @@
                                     disabled class="form-control" />
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label class="control-label col-sm-3">End Date</label>
                             <div class="col-sm-9">
@@ -130,7 +135,8 @@
                             Payments
                         </h4>
                         <hr>
-                        <form action="{{ route('payment/store') }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('payment/store') }}" method="POST" enctype="multipart/form-data"
+                            id="paymentForm">
                             @csrf
                             <div class="form-group">
                                 <label class="control-label col-sm-3">Payment Type :</label>
@@ -150,7 +156,8 @@
                             <div class="form-group mt-3">
                                 <label class="control-label col-sm-3">Price :</label>
                                 <div class="col-sm-12 mt-2">
-                                    <input type="number" class="form-control input-quantity" name="price" required>
+                                    <input type="text" class="form-control input-quantity" name="price"
+                                        id="price" required>
                                 </div>
                             </div>
                             <div class="form-group mt-3">
@@ -168,4 +175,35 @@
             </div>
         </div>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        // Jika terdapat pesan sukses dari server, tampilkan pesan toastr
+        @if (session('success'))
+            toastr.success("{{ session('success') }}");
+        @endif
+
+        // Jika terdapat pesan error dari server, tampilkan pesan toastr
+        @if (session('error'))
+            toastr.error("{{ session('error') }}");
+        @endif
+        
+        $(document).ready(function() {
+            function formatNumber(value) {
+                return value.replace(/\D/g, "") // Remove non-digit characters
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ","); // Add commas
+            }
+
+            $('#price').on('input', function() {
+                var input = $(this);
+                var value = input.val();
+                input.val(formatNumber(value));
+            });
+
+            $('#paymentForm').on('submit', function() {
+                var priceInput = $('#price');
+                var priceValue = priceInput.val().replace(/,/g, ''); // Remove commas
+                priceInput.val(priceValue); // Set the input value without commas
+            });
+        });
+    </script>
 @endsection
