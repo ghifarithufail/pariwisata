@@ -16,7 +16,7 @@
                     Booking Detail
                 </h4>
                 <hr>
-                <div class="row">
+                <div class="row justify-content-center">
                     <div class="col-xs-12 col-sm-6">
                         <div class="form-group">
                             <label class="control-label col-sm-3">Name :</label>
@@ -140,9 +140,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="pt-5 d-flex justify-content-center">
+                <div class="mt-5 d-flex justify-content-center">
                     <a href="{{ route('spj/print', $spj->id) }}" target="_blank">
                         <button type="submit" class="btn btn-primary me-sm-3 me-1">Print SPJ Masuk</button>
+                    </a>
+                    <a href="{{ route('spj/back', $spj->booking_details->booking_id) }}" target="_blank">
+                        <button type="submit" class="btn btn-success me-sm-3 me-1">SPJ KELUAR SELESAI</button>
                     </a>
                 </div>
                 @endif

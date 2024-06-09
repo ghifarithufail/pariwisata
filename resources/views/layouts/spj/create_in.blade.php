@@ -182,6 +182,9 @@
                             <a href="{{ route('spj/print', $spj->id) }}" target="_blank">
                                 <button type="submit" class="btn btn-primary me-sm-3 me-1">Print SPJ Keluar</button>
                             </a>
+                            <a href="{{ route('spj/back', $spj->booking_details->booking_id) }}">
+                                <button type="submit" class="btn btn-success me-sm-3 me-1">SPJ Masuk SELESAI</button>
+                            </a>
                         </div>
                     @endif
                 </div>

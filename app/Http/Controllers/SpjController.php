@@ -122,6 +122,12 @@ class SpjController extends Controller
         ]);
     }
 
+    public function back($id){
+        $spj = Spj::find($id);
+
+        return redirect('spj/detail/' . $spj->booking_details->booking_id);
+    }
+
     public function print($id)
     {
         $spj = Spj::find($id);

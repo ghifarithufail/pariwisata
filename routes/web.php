@@ -186,6 +186,7 @@ Route::prefix('spj')->group(function () {
     Route::get('/detail/{id}', [SpjController::class, 'detail'])->name('spj/detail');
     Route::get('/data/{id}', [SpjController::class, 'data'])->name('spj/data');
     Route::post('/keluar/{id}', [SpjController::class, 'keluar'])->name('spj/keluar');
+    Route::get('/back/{id}', [SpjController::class, 'back'])->name('spj/back');
     // Route::post('/masuk/{id}', [SpjController::class, 'masuk'])->name('spj/masuk');
     Route::get('/print/out/{id}', [SpjController::class, 'detail_out'])->name('spj/print_out');
     Route::get('/print_out/{id}', [SpjController::class, 'print'])->name('spj/print');
